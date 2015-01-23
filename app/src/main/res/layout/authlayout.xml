@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			  android:orientation="vertical"
+			  android:layout_width="match_parent"
+			  android:layout_height="match_parent"
+			  android:weightSum="1"
+		>
+
+	<LinearLayout
+			android:orientation="vertical"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_weight="0.8"
+			android:gravity="center_vertical"
+			>
+
+		<EditText
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:inputType="textPersonName"
+				android:ems="10"
+				android:id="@+id/t_login_auth"
+				android:layout_gravity="center_horizontal"
+				android:hint="@string/login_title"
+				android:textSize="25dp"
+				android:layout_marginBottom="5dp"/>
+
+		<EditText
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:inputType="textPassword"
+				android:ems="10"
+				android:id="@+id/t_pass_auth"
+				android:hint="@string/pass_title"
+				android:textSize="25dp"
+				android:layout_marginBottom="5dp"/>
+
+		<ProgressBar
+				android:id="@+id/progressBar1"
+				style="?android:attr/progressBarStyleLarge"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_below="@+id/editText1"
+				android:layout_centerHorizontal="true"
+				android:layout_marginTop="24dp"
+				android:layout_gravity="center_horizontal"/>
+
+	</LinearLayout>
+
+	<LinearLayout
+			android:orientation="horizontal"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:gravity="bottom"
+			android:layout_weight="0.2">
+
+
+		<Button
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/register_b_title"
+				android:id="@+id/button"
+				android:layout_weight="0.5"
+				android:textSize="25dp"/>
+
+		<Button
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/login_b_title"
+				android:id="@+id/button2"
+				android:layout_weight="0.8"
+				android:textSize="25dp"
+				/>
+
+	</LinearLayout>
+
+</LinearLayout>
