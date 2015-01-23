@@ -1,15 +1,17 @@
 buildscript {
     repositories {
         jcenter()
+        mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.13.0'
+        classpath 'com.android.tools.build:gradle:0.14.0'
     }
 }
 apply plugin: 'com.android.application'
 
 repositories {
         jcenter()
+        mavenCentral()
 }
 
 android {
@@ -38,4 +40,6 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.vk:androidsdk:1.3.6'
+    compile 'com.android.support:support-v4:21.0.3'
 }
