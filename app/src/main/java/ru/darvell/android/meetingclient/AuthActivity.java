@@ -1,6 +1,7 @@
 package ru.darvell.android.meetingclient;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,6 +10,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import com.vk.sdk.VKAccessToken;
+import com.vk.sdk.VKSdk;
+import com.vk.sdk.VKSdkListener;
+import com.vk.sdk.api.VKError;
+import com.vk.sdk.dialogs.VKCaptchaDialog;
+import com.vk.sdk.util.VKUtil;
 import ru.darvell.android.meetingclient.api.Conf;
 import ru.darvell.android.meetingclient.api.MeetingApi;
 
@@ -29,6 +36,9 @@ public class AuthActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.authlayout);
+
+
+//		VKSdk.initialize(VKSdkListener listener, "4780129", "TAP31m3ap0EUXdFIw1LM");
 
 		Button button = (Button) findViewById(R.id.button);
 		Button button2 = (Button) findViewById(R.id.button2);
@@ -58,6 +68,8 @@ public class AuthActivity extends Activity {
 	void doLogin(String login, String pass){
 		mt = new MyTask();
 		mt.execute(MeetingApi.prepareLogin(login, pass));
+//		String[] fingerprints = VKUtil.getCertificateFingerprint(this, this.getPackageName());
+//		Log.i("key", fingerprints[0]);
 	}
 
 	//Вызывает основную форму приложения
