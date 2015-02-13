@@ -33,7 +33,7 @@ public class AuthActivity extends Activity {
 		Button button = (Button) findViewById(R.id.button);
 		Button button2 = (Button) findViewById(R.id.button2);
 		progressBar = (ProgressBar) findViewById(R.id.progressBar1);
-		progressBar.setVisibility(View.INVISIBLE);
+		setVisiblePB(false);
 
 		loginText = (EditText) findViewById(R.id.t_login_auth);
 		passText = (EditText) findViewById(R.id.t_pass_auth);

@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import ru.darvell.android.meetingclient.api.MeetingApi;
 
@@ -25,6 +26,7 @@ public class RegisterActivity extends Activity {
 	EditText passText;
 	EditText emailText;
 	Context context;
+	ProgressBar progressBar;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,9 @@ public class RegisterActivity extends Activity {
 		loginText = (EditText) findViewById(R.id.t_login_register);
 		passText = (EditText) findViewById(R.id.t_pass_register);
 		emailText = (EditText) findViewById(R.id.t_email_register);
+		progressBar = (ProgressBar) findViewById(R.id.progressBarRegister);
+		setVisiblePB(false);
+
 		context = this;
 
 		registerBtn.setOnClickListener(new View.OnClickListener() {
@@ -59,7 +64,7 @@ public class RegisterActivity extends Activity {
 		if ((!loginText.getText().toString().equals(""))||
 				(!passText.getText().toString().equals(""))||
 				(!emailText.getText().toString().equals(""))) {
-
+			setVisiblePB(true);
 			myTask.execute(MeetingApi.preapareRegister(loginText.getText().toString(),
 					passText.getText().toString(),
 					emailText.getText().toString()
@@ -78,6 +83,14 @@ public class RegisterActivity extends Activity {
 		startActivity(new Intent(context, AuthActivity.class));
 	}
 
+	void setVisiblePB(boolean visible){
+		if (visible){
+			progressBar.setVisibility(View.VISIBLE);
+		}else {
+			progressBar.setVisibility(View.INVISIBLE);
+		}
+	}
+
 	class MyTask extends AsyncTask<Map<String,String>, Integer, String>{
 
 		@Override
@@ -93,6 +106,7 @@ public class RegisterActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(String s) {
+			setVisiblePB(false);
 			if (s == null) {
 				Toast.makeText(context, "Problem with connection?", Toast.LENGTH_LONG).show();
 				Log.i("debug", "Error!!!");
@@ -110,6 +124,11 @@ public class RegisterActivity extends Activity {
 					Toast.makeText(context, "I can't register you", Toast.LENGTH_LONG).show();
 				}
 			}
+		}
+
+		@Override
+		protected void onProgressUpdate(Integer... values) {
+			progressBar.setProgress(values[0]);
 		}
 	}
 
