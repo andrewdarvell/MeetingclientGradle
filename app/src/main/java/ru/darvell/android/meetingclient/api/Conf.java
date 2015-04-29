@@ -1,11 +1,8 @@
 package ru.darvell.android.meetingclient.api;
 
-/**
- * Created by darvell on 16.01.15.
- */
 public class Conf {
 
-	public static final String apiUrl = "http://env-5340213.jelastic.regruhosting.ru/meeting/";
+	public static final String apiUrl = "http://meeting.darvell.ru/";
 	public static final String apiKey = "bcbe3365e6ac95ea2c0343a2395834dd";
 	public static String sessKey = "";
 

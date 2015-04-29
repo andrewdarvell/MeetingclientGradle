@@ -6,9 +6,11 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONObject;
 
 import java.util.*;
 
@@ -22,11 +24,11 @@ public class MeetingApi {
 	public static Map<String, String> prepareLogin(String login, String pass){
 		Map<String, String> params = new HashMap<String, String>();
 
-		params.put("api_key",Conf.apiKey);
-		params.put("method","secur");
-		params.put("action","getKey");
-		params.put("login",login);
-		params.put("pass",pass);
+        params.put("method","auth");
+        params.put("apiKey", Conf.apiKey);
+        params.put("login", login);
+        params.put("passw", pass);
+
 		return params;
 	}
 
@@ -58,7 +60,7 @@ public class MeetingApi {
 		}
 	}
 
-	public static String sendPost(Map<String, String> params){
+	public static JSONObject sendPost(Map<String, String> params){
 		try{
 			HttpClient httpclient = new DefaultHttpClient();
 			HttpPost httpPost = new HttpPost(Conf.apiUrl+params.get("method"));
@@ -74,15 +76,30 @@ public class MeetingApi {
 			}
 			httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 			String responseRaw = httpclient.execute(httpPost, new BasicResponseHandler());
-
-
-			return responseRaw;
-
+			return new JSONObject(responseRaw);
 		}catch (Exception e){
 			e.printStackTrace();
 			return null;
 		}
 	}
+
+    public static JSONObject sendPostJson(JSONObject jsonBody, String url){
+        try{
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpPost httpPost = new HttpPost(Conf.apiUrl+url);
+            Log.i("url", httpPost.toString());
+            httpPost.setEntity(new StringEntity(jsonBody.toString()));
+            httpPost.setHeader("Accept", "application/json");
+            httpPost.setHeader("Content-type", "application/json");
+            String responseRaw = httpclient.execute(httpPost, new BasicResponseHandler());
+            return new JSONObject(responseRaw);
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
 
 	public static String sendGet(Map<String, String> params){
 		try{

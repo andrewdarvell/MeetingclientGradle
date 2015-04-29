@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import org.json.JSONObject;
 import ru.darvell.android.meetingclient.api.Conf;
 import ru.darvell.android.meetingclient.api.MeetingApi;
 
@@ -81,9 +82,9 @@ public class AuthActivity extends Activity {
 	}
 
 	//Класс посылает запрос в другом потоке. Не GUI
-	class MyTask extends AsyncTask<Map<String,String>, Integer, String> {
+	class MyTask extends AsyncTask<Map<String,String>, Integer, JSONObject> {
 		@Override
-		protected String doInBackground(Map<String, String>... params) {
+		protected JSONObject doInBackground(Map<String, String>... params) {
 			try {
 				Log.i("debug", "Send Post!!!");
 				return MeetingApi.sendPost(params[0]);
@@ -95,20 +96,23 @@ public class AuthActivity extends Activity {
 		}
 
 		@Override
-		protected void onPostExecute(String s) {
+		protected void onPostExecute(JSONObject response) {
 			setVisiblePB(false);
-			if (s == null) {
+			if (response == null) {
 				Log.i("debug", "Error!!!");
 			}else {
-				Map<String, String> response = MeetingApi.parseParams(s);
-				if (response.get("code").equals("0")){
-					Conf.sessKey = response.get("main");
-					Conf.login = loginText.getText().toString();
-					Conf.pass = passText.getText().toString();
-					Conf.exist = true;
-					Log.i("debug", Conf.sessKey);
-					showMain();
-				}
+                try {
+                    if (response.getInt("exit_code") == 0) {
+                        Conf.sessKey = response.getString("session_key");
+                        Conf.login = loginText.getText().toString();
+                        Conf.pass = passText.getText().toString();
+                        Conf.exist = true;
+                        Log.i("debug", Conf.sessKey);
+                        showMain();
+                    }
+                }catch (Exception e){
+                    Log.e("error", e.toString());
+                }
 			}
 		}
 
