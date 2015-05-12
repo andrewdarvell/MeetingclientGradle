@@ -102,8 +102,10 @@ public class AuthActivity extends Activity {
 				Log.i("debug", "Error!!!");
 			}else {
                 try {
-                    if (response.getInt("exit_code") == 0) {
-                        Conf.sessKey = response.getString("session_key");
+                    if (response.getInt("exitCode") == 0) {
+                        Conf.sessKey = response.getString("sessionKey");
+                        JSONObject user = (JSONObject) response.get("user");
+                        Conf.userId = user.getInt("userId");
                         Conf.login = loginText.getText().toString();
                         Conf.pass = passText.getText().toString();
                         Conf.exist = true;

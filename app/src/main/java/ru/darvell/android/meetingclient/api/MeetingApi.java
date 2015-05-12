@@ -23,18 +23,15 @@ public class MeetingApi {
 
 	public static Map<String, String> prepareLogin(String login, String pass){
 		Map<String, String> params = new HashMap<String, String>();
-
         params.put("method","auth");
         params.put("apiKey", Conf.apiKey);
         params.put("login", login);
         params.put("passw", pass);
-
 		return params;
 	}
 
 	public static Map<String, String> preapareRegister(String login, String pass, String email){
-		Map<String, String> params = new HashMap<String, String>();
-
+		Map<String, String> params = new HashMap<>();
 		params.put("method", "users");
 		params.put("action", "register");
 		params.put("login", login);
@@ -43,6 +40,23 @@ public class MeetingApi {
 		return params;
 	}
 
+    public static Map<String, String> prepareGetAllSchedules(){
+        Map<String, String> params = new HashMap<>();
+        params.put("request", "user");
+        params.put("method", "schedules/get_all/"+Conf.userId);
+        params.put("sessionKey", Conf.sessKey);
+        params.put("apiKey", Conf.apiKey);
+        return params;
+    }
+
+    public static Map<String, String> prepareGetAllSchedulesFriends(){
+        Map<String, String> params = new HashMap<>();
+        params.put("request", "friends");
+        params.put("method", "schedules/get_all/"+Conf.userId);
+        params.put("sessionKey", Conf.sessKey);
+        params.put("apiKey", Conf.apiKey);
+        return params;
+    }
 
 	public static Map<String, String> parseParams(String str){
 		Map<String, String> result = new HashMap<String, String>();
@@ -64,6 +78,7 @@ public class MeetingApi {
 		try{
 			HttpClient httpclient = new DefaultHttpClient();
 			HttpPost httpPost = new HttpPost(Conf.apiUrl+params.get("method"));
+            Log.i("URL", httpPost.getURI().toString());
 
 			Set keys = params.keySet();
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(keys.size());
@@ -99,8 +114,6 @@ public class MeetingApi {
         }
     }
 
-
-
 	public static String sendGet(Map<String, String> params){
 		try{
 			HttpClient httpClient = new DefaultHttpClient();
@@ -121,7 +134,4 @@ public class MeetingApi {
 			return null;
 		}
 	}
-
-//	curl --data "action=getKey&login=ron&pass=1&api_key=bcbe3365e6ac95ea2c0343a2395834dd" http://env-5340213.jelastic.regruhosting.ru/meeting/secur
-
 }

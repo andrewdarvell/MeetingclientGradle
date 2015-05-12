@@ -105,7 +105,7 @@ public class RegisterActivity extends Activity {
 				Log.i("debug", "Error!!!");
 			}else {
 				try {
-                    if (response.getInt("exit_code") == 0) {
+                    if (response.getInt("exitСode") == 0) {
                         Toast.makeText(context, "Success registered", Toast.LENGTH_LONG).show();
                         showLoginForm();
                         Log.i("debug", "Success Register");
