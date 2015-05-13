@@ -1,26 +1,24 @@
 package ru.darvell.android.meetingclient;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import org.json.JSONObject;
+import com.octo.android.robospice.persistence.DurationInMillis;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
 import ru.darvell.android.meetingclient.api.Conf;
-import ru.darvell.android.meetingclient.api.MeetingApi;
-
-import java.util.Map;
+import ru.darvell.android.meetingclient.api.MeetingHttpRequest;
 
 /**
  * Форма авторизации и регистрации
  */
-public class AuthActivity extends Activity {
+public class AuthActivity extends BaseActivity {
 
-	MyTask mt;
+//	MyTask mt;
 
 	EditText loginText;
 	EditText passText;
@@ -58,8 +56,11 @@ public class AuthActivity extends Activity {
 	}
 
 	void doLogin(String login, String pass){
-		mt = new MyTask();
-		mt.execute(MeetingApi.prepareLogin(login, pass));
+//		mt = new MyTask();
+//		mt.execute(MeetingApi.prepareLogin(login, pass));
+        String url = Conf.apiUrl+"/auth?login="+login+"&passw="+pass+"&apiKey="+Conf.apiKey;
+        MeetingHttpRequest meetingHttpRequest = new MeetingHttpRequest(url);
+        getSpiceManager().execute(meetingHttpRequest, "txt", DurationInMillis.ONE_MINUTE, new TextRequestListener());
 	}
 
 	//Вызывает основную форму приложения
@@ -82,7 +83,21 @@ public class AuthActivity extends Activity {
 		}
 	}
 
-	//Класс посылает запрос в другом потоке. Не GUI
+    public final class TextRequestListener implements RequestListener<String>{
+
+        @Override
+        public void onRequestFailure(SpiceException spiceException) {
+
+        }
+
+        @Override
+        public void onRequestSuccess(String s) {
+            Log.d("result", s);
+            showRegister();
+        }
+    }
+
+	/*//Класс посылает запрос в другом потоке. Не GUI
 	class MyTask extends AsyncTask<Map<String,String>, Integer, JSONObject> {
 		@Override
 		protected JSONObject doInBackground(Map<String, String>... params) {
@@ -123,6 +138,6 @@ public class AuthActivity extends Activity {
 		protected void onProgressUpdate(Integer... values) {
 			progressBar.setProgress(values[0]);
 		}
-	}
+	}*/
 
 }

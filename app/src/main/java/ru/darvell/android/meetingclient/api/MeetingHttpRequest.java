@@ -19,7 +19,8 @@ public class MeetingHttpRequest extends GoogleHttpClientSpiceRequest<String> {
     public String loadDataFromNetwork() throws IOException {
         HttpTransport httpTransport = new NetHttpTransport();
         HttpRequestFactory factory = httpTransport.createRequestFactory(new MeetingHttpRequestInitializer());
-        HttpRequest request = factory.buildGetRequest(new GenericUrl(baseUrl));
+//        HttpRequest request = factory.buildGetRequest(new GenericUrl(baseUrl));
+        HttpRequest request = factory.buildPostRequest(baseUrl,);
 
         return request.execute().parseAsString();
     }
