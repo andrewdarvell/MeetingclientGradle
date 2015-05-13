@@ -12,7 +12,6 @@ import android.widget.ProgressBar;
 import org.json.JSONObject;
 import ru.darvell.android.meetingclient.api.Conf;
 import ru.darvell.android.meetingclient.api.MeetingApi;
-import ru.darvell.android.meetingclient.service.MeetingService;
 
 import java.util.Map;
 
@@ -56,7 +55,6 @@ public class AuthActivity extends Activity {
 			}
 		});
 
-		startService(new Intent(this, MeetingService.class));
 	}
 
 	void doLogin(String login, String pass){
