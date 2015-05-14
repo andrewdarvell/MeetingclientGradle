@@ -10,8 +10,12 @@ import android.widget.ProgressBar;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
+import org.json.JSONObject;
 import ru.darvell.android.meetingclient.api.Conf;
 import ru.darvell.android.meetingclient.api.MeetingHttpRequest;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Форма авторизации и регистрации
@@ -58,8 +62,13 @@ public class AuthActivity extends BaseActivity {
 	void doLogin(String login, String pass){
 //		mt = new MyTask();
 //		mt.execute(MeetingApi.prepareLogin(login, pass));
-        String url = Conf.apiUrl+"/auth?login="+login+"&passw="+pass+"&apiKey="+Conf.apiKey;
-        MeetingHttpRequest meetingHttpRequest = new MeetingHttpRequest(url);
+        Map<String, String> params = new HashMap<>();
+        params.put("login", login);
+        params.put("passw", pass);
+        params.put("apiKey", Conf.apiKey);
+
+        getSpiceManager().removeAllDataFromCache();
+        MeetingHttpRequest meetingHttpRequest = new MeetingHttpRequest(Conf.apiUrl+"/auth", params);
         getSpiceManager().execute(meetingHttpRequest, "txt", DurationInMillis.ONE_MINUTE, new TextRequestListener());
 	}
 
@@ -93,7 +102,25 @@ public class AuthActivity extends BaseActivity {
         @Override
         public void onRequestSuccess(String s) {
             Log.d("result", s);
-            showRegister();
+            if (!s.equals("") && (s != null)){
+                try {
+                    JSONObject jsonObject = new JSONObject(s);
+                    int exitCode = jsonObject.getInt("exitCode");
+                    switch (exitCode){
+                        case 0: JSONObject user = jsonObject.getJSONObject("user");
+                                Conf.userId = user.getInt("userId");
+                                Conf.login = loginText.getText().toString();
+                                Conf.pass = passText.getText().toString();
+                                showMain();
+                                break;
+                        case -1:Log.d("error", "Error Login");
+                                break;
+                    }
+                    setVisiblePB(false);
+                }catch (Exception e){
+                    Log.e("error", e.toString());
+                }
+            }
         }
     }
 
