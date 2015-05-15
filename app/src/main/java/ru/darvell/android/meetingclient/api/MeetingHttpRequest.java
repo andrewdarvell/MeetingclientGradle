@@ -7,25 +7,29 @@ import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpice
 import java.io.IOException;
 import java.util.Map;
 
-public class MeetingHttpRequest extends GoogleHttpClientSpiceRequest<String> {
+public class MeetingHttpRequest extends GoogleHttpClientSpiceRequest<Object> {
 
     private String baseUrl;
     private Map<String, String> parameters;
+    private int requestType;
 
-    public MeetingHttpRequest(String url, Map<String, String> parameters) {
-        super(String.class);
+    public MeetingHttpRequest(String url, Map<String, String> parameters, int requestType) {
+        super(Object.class);
         this.baseUrl = url;
         this.parameters = parameters;
+        this.requestType = requestType;
     }
 
+
     @Override
-    public String loadDataFromNetwork() throws IOException {
+    public Object loadDataFromNetwork() throws IOException {
         HttpTransport httpTransport = new NetHttpTransport();
-        HttpRequestFactory factory = httpTransport.createRequestFactory(new MeetingHttpRequestInitializer());
+        HttpRequestFactory factory = httpTransport.createRequestFactory();
 
         HttpContent content = new UrlEncodedContent(parameters);
         HttpRequest request = factory.buildPostRequest(new GenericUrl(baseUrl), content);
-        return request.execute().parseAsString();
+
+        return null;
     }
 
     private class MeetingHttpRequestInitializer implements HttpRequestInitializer{
@@ -35,7 +39,9 @@ public class MeetingHttpRequest extends GoogleHttpClientSpiceRequest<String> {
         @Override
         public void initialize(HttpRequest request) throws IOException {
             // тут можно добавить каких-то параметров к request, например, парсер json
-            // request.setParser(new JacksonFactory().createJsonObjectParser()));
+//            request.setParser(new JacksonFactory().createJsonObjectParser()));
+//            request.setParser(new JsonObjectParser(new JacksonObjectPersisterFactory() ));
+//            request.setParser(new JacksonFactory().createJsonObjectParser());
         }
     }
 }

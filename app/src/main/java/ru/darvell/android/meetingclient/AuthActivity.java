@@ -2,7 +2,6 @@ package ru.darvell.android.meetingclient;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,7 +9,6 @@ import android.widget.ProgressBar;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
-import org.json.JSONObject;
 import ru.darvell.android.meetingclient.api.Conf;
 import ru.darvell.android.meetingclient.api.MeetingHttpRequest;
 
@@ -60,15 +58,14 @@ public class AuthActivity extends BaseActivity {
 	}
 
 	void doLogin(String login, String pass){
-//		mt = new MyTask();
-//		mt.execute(MeetingApi.prepareLogin(login, pass));
+
         Map<String, String> params = new HashMap<>();
         params.put("login", login);
         params.put("passw", pass);
         params.put("apiKey", Conf.apiKey);
 
         getSpiceManager().removeAllDataFromCache();
-        MeetingHttpRequest meetingHttpRequest = new MeetingHttpRequest(Conf.apiUrl+"/auth", params);
+        MeetingHttpRequest meetingHttpRequest = new MeetingHttpRequest(Conf.apiUrl+"/auth", params, 1);
         getSpiceManager().execute(meetingHttpRequest, "txt", DurationInMillis.ONE_MINUTE, new TextRequestListener());
 	}
 
@@ -92,7 +89,8 @@ public class AuthActivity extends BaseActivity {
 		}
 	}
 
-    public final class TextRequestListener implements RequestListener<String>{
+
+    public final class TextRequestListener<T> implements RequestListener<T>{
 
         @Override
         public void onRequestFailure(SpiceException spiceException) {
@@ -100,27 +98,28 @@ public class AuthActivity extends BaseActivity {
         }
 
         @Override
-        public void onRequestSuccess(String s) {
-            Log.d("result", s);
-            if (!s.equals("") && (s != null)){
-                try {
-                    JSONObject jsonObject = new JSONObject(s);
-                    int exitCode = jsonObject.getInt("exitCode");
-                    switch (exitCode){
-                        case 0: JSONObject user = jsonObject.getJSONObject("user");
-                                Conf.userId = user.getInt("userId");
-                                Conf.login = loginText.getText().toString();
-                                Conf.pass = passText.getText().toString();
-                                showMain();
-                                break;
-                        case -1:Log.d("error", "Error Login");
-                                break;
-                    }
-                    setVisiblePB(false);
-                }catch (Exception e){
-                    Log.e("error", e.toString());
-                }
-            }
+        public void onRequestSuccess(Object response) {
+
+
+//            Log.d("result", response.toString());
+//            if ((response != null)){
+//                try {
+//                    int exitCode = response.getInt("exitCode");
+//                    switch (exitCode){
+//                        case 0: JSONObject user = response.getJSONObject("user");
+//                                Conf.userId = user.getInt("userId");
+//                                Conf.login = loginText.getText().toString();
+//                                Conf.pass = passText.getText().toString();
+//                                showMain();
+//                                break;
+//                        case -1:Log.d("error", "Error Login");
+//                                break;
+//                    }
+//                    setVisiblePB(false);
+//                }catch (Exception e){
+//                    Log.e("error", e.toString());
+//                }
+//            }
         }
     }
 

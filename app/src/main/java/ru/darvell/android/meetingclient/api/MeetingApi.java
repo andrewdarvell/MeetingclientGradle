@@ -21,6 +21,7 @@ public class MeetingApi {
 
 	public static final String SECUR_METHOD = "secur";
 
+
 	public static Map<String, String> prepareLogin(String login, String pass){
 		Map<String, String> params = new HashMap<String, String>();
         params.put("method","auth");
