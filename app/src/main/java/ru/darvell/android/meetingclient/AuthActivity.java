@@ -84,7 +84,7 @@ public class AuthActivity extends Activity {
 		}
 	}
 
-	//Класс посылает запрос в другом потоке. Не GUIfe
+	//Класс посылает запрос в другом потоке. Не
 	class MyTask extends AsyncTask<Map<String,String>, Integer, JSONObject> {
 		@Override
 		protected JSONObject doInBackground(Map<String, String>... params) {
