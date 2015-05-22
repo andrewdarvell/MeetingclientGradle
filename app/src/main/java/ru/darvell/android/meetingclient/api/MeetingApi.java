@@ -1,5 +1,6 @@
 package ru.darvell.android.meetingclient.api;
 
+import android.content.Intent;
 import android.util.Log;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -20,13 +21,14 @@ import java.util.*;
 public class MeetingApi {
 
 	public static final String SECUR_METHOD = "secur";
+    public static final int LOGIN = 1;
 
-	public static Map<String, String> prepareLogin(String login, String pass){
+	public static Map<String, String> prepareLogin(Intent intent){
 		Map<String, String> params = new HashMap<String, String>();
         params.put("method","auth");
         params.put("apiKey", Conf.apiKey);
-        params.put("login", login);
-        params.put("passw", pass);
+        params.put("login", intent.getStringExtra("login"));
+        params.put("passw", intent.getStringExtra("pass"));
 		return params;
 	}
 

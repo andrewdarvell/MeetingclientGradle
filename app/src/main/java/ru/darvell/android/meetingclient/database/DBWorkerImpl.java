@@ -17,15 +17,15 @@ public class DBWorkerImpl implements DBWorker{
 
     public void putRequest(String result, int type, int act_id ){
         String sql = "INSERT INTO requests(result, type, act_id)" +
-                    "VALUES ("+result+","+type+","+act_id+")";
+                    "VALUES (\'"+result+"\',"+type+","+act_id+")";
         SQLiteDatabase sqLiteDatabase = getDBHelper();
         sqLiteDatabase.execSQL(sql);
         sqLiteDatabase.close();
     }
 
     public Map<String, String> getRequests(int act_id){
-        String sql = "SELECT *" +
-                    "FROM requests" +
+        String sql = "SELECT * " +
+                    "FROM requests " +
                     "WHERE act_id = "+act_id;
 
         Map<String, String> result = new HashMap<>();
@@ -42,6 +42,14 @@ public class DBWorkerImpl implements DBWorker{
 
     public void delRequest(int id){
         String sql = "DELETE FROM requests WHERE id = "+id;
+        SQLiteDatabase sqLiteDatabase = getDBHelper();
+        sqLiteDatabase.execSQL(sql);
+        sqLiteDatabase.close();
+    }
+
+    @Override
+    public void delRequests(int atc_id) {
+        String sql = "DELETE FROM requests WHERE act_id = "+atc_id;
         SQLiteDatabase sqLiteDatabase = getDBHelper();
         sqLiteDatabase.execSQL(sql);
         sqLiteDatabase.close();
