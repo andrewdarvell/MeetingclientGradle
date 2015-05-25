@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 import org.json.JSONObject;
-import ru.darvell.android.meetingclient.AuthActivity;
+import ru.darvell.android.meetingclient.api.Conf;
 import ru.darvell.android.meetingclient.api.MeetingApi;
 import ru.darvell.android.meetingclient.database.DBFabric;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class MeetingService extends Service{
 
@@ -69,7 +71,7 @@ public class MeetingService extends Service{
             JSONObject s = MeetingApi.sendPost(parameters);
             DBFabric.getDBWorker(service).putRequest(s.toString(), type, act_id);
             Log.d("THREAD", s.toString());
-            Intent intent = new Intent(AuthActivity.BROADCAST_ACTION);
+            Intent intent = new Intent(Conf.BROADCAST_ACTION);
             intent.putExtra("actId", act_id);
             queue.remove(new Integer(type));
             service.sendBroadcast(intent);
