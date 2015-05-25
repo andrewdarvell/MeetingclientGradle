@@ -34,8 +34,9 @@ public class MeetingService extends Service{
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(LOG_TAG, "onStartCommand.");
         switch (intent.getIntExtra("method", -1)){
-            case MeetingApi.LOGIN : startRequest(intent);
+            case MeetingApi.LOGIN : startLoginRequest(intent);
                 break;
+            case MeetingApi.REGISTER:
         }
         return super.onStartCommand(intent, flags, startId);
     }
@@ -46,9 +47,14 @@ public class MeetingService extends Service{
         return null;
     }
 
-    void startRequest(Intent intent){
+    void startLoginRequest(Intent intent){
         new SenderRequest(MeetingApi.prepareLogin(intent), this, intent.getIntExtra("method", -1), intent.getIntExtra("actId", -1));
     }
+
+    void startRegisterRequest(Intent intent){
+        new SenderRequest(MeetingApi.prepareLogin(intent), this, intent.getIntExtra("method", -1), intent.getIntExtra("actId", -1));
+    }
+
 
     class SenderRequest extends Thread{
 
@@ -69,6 +75,37 @@ public class MeetingService extends Service{
         @Override
         public void run() {
             JSONObject s = MeetingApi.sendPost(parameters);
+            DBFabric.getDBWorker(service).putRequest(s.toString(), type, act_id);
+            Log.d("THREAD", s.toString());
+            Intent intent = new Intent(Conf.BROADCAST_ACTION);
+            intent.putExtra("actId", act_id);
+            queue.remove(new Integer(type));
+            service.sendBroadcast(intent);
+            service.stopSelf();
+        }
+    }
+
+    class SenderJsonRequest extends Thread{
+
+        JSONObject jsonObject;
+        String url;
+        Service service;
+        int type;
+        int act_id;
+
+        SenderJsonRequest(JSONObject jsonObject, Service service, int type, int act_id, String url){
+            this.jsonObject = jsonObject;
+            this.service = service;
+            this.type = type;
+            this.act_id = act_id;
+            this.url = url;
+            Log.d("THREAD", "Start");
+            start();
+        }
+
+        @Override
+        public void run() {
+            JSONObject s = MeetingApi.sendPostJson(jsonObject, url);
             DBFabric.getDBWorker(service).putRequest(s.toString(), type, act_id);
             Log.d("THREAD", s.toString());
             Intent intent = new Intent(Conf.BROADCAST_ACTION);

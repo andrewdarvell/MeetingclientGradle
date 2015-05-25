@@ -21,7 +21,14 @@ import java.util.*;
 public class MeetingApi {
 
 	public static final String SECUR_METHOD = "secur";
+    final static String LOG_TAG = "meeting_api";
+    static Map<Integer, String> urlsString;
     public static final int LOGIN = 1;
+    public static final int REGISTER = 2;
+
+    static {
+        urlsString.put(LOGIN, "")
+    }
 
 	public static Map<String, String> prepareLogin(Intent intent){
 		Map<String, String> params = new HashMap<String, String>();
@@ -32,15 +39,15 @@ public class MeetingApi {
 		return params;
 	}
 
-	public static Map<String, String> preapareRegister(String login, String pass, String email){
-		Map<String, String> params = new HashMap<>();
-		params.put("method", "users");
-		params.put("action", "register");
-		params.put("login", login);
-		params.put("pass", pass);
-		params.put("email", email);
-		return params;
-	}
+    public static JSONObject sendRegister(String jsonStr){
+        try {
+            JSONObject jsonObject = new JSONObject(jsonStr);
+            return sendPostJson(jsonObject, "auth/register");
+        }catch (Exception e){
+            Log.d(LOG_TAG, e.toString());
+            return null;
+        }
+    }
 
     public static Map<String, String> prepareGetAllSchedules(){
         Map<String, String> params = new HashMap<>();

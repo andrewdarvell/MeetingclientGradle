@@ -1,8 +1,10 @@
 package ru.darvell.android.meetingclient;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +15,9 @@ import android.widget.Toast;
 import org.json.JSONObject;
 import ru.darvell.android.meetingclient.api.Conf;
 import ru.darvell.android.meetingclient.api.MeetingApi;
+import ru.darvell.android.meetingclient.database.DBFabric;
+
+import java.util.Map;
 
 /**
  * Регистрация нового пользователя
@@ -25,6 +30,10 @@ public class RegisterActivity extends Activity {
 	EditText passText;
 	EditText emailText;
 	Context context;
+
+    BroadcastReceiver br;
+    final String LOG_TAG = "meeting_register";
+    public final static int ACT_ID = 2;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -51,6 +60,21 @@ public class RegisterActivity extends Activity {
 				cancelRegister();
 			}
 		});
+
+        br = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getIntExtra("actId", -1) == ACT_ID){
+                    Log.d(LOG_TAG, "gotRequest");
+//                    setVisiblePB(false);
+                    Map<String,String> map = DBFabric.getDBWorker(context).getRequests(ACT_ID);
+//                    ckeckLogin(map.get("result"));
+                    Log.d(LOG_TAG, map.get("result"));
+                }
+            }
+        };
+        IntentFilter intFilt = new IntentFilter(Conf.BROADCAST_ACTION);
+        registerReceiver(br, intFilt);
 
 	}
 
