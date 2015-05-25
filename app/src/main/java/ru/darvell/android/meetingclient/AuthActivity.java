@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import org.json.JSONObject;
+import ru.darvell.android.meetingclient.api.Conf;
 import ru.darvell.android.meetingclient.api.Requester;
 import ru.darvell.android.meetingclient.database.DBFabric;
 
@@ -21,14 +23,15 @@ import java.util.Map;
  */
 public class AuthActivity extends Activity {
 
-//	MyTask mt;
-
 	EditText loginText;
 	EditText passText;
 	ProgressBar progressBar;
-    Context context = this;
+    Button button;
+    Button button2;
 
-    public final static String BROADCAST_ACTION = "ru.darvell.android.meetingclient";
+    BroadcastReceiver br;
+
+    final String LOG_TAG = "meeting_auth";
     public final static int ACT_ID = 1;
 
 	@Override
@@ -36,8 +39,8 @@ public class AuthActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.authlayout);
 
-		Button button = (Button) findViewById(R.id.button);
-		Button button2 = (Button) findViewById(R.id.button2);
+		button = (Button) findViewById(R.id.button);
+		button2 = (Button) findViewById(R.id.button2);
 		progressBar = (ProgressBar) findViewById(R.id.progressBar1);
 		progressBar.setVisibility(View.INVISIBLE);
 
@@ -56,27 +59,27 @@ public class AuthActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				setVisiblePB(true);
-				doLogin(loginText.getText().toString(), passText.getText().toString());
+				sendLogin(loginText.getText().toString(), passText.getText().toString());
 			}
 		});
 
-        BroadcastReceiver br = new BroadcastReceiver() {
+        br = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (intent.getIntExtra("actId", -1) == ACT_ID){
                     Log.d("AuthAct", "gotRequest");
                     setVisiblePB(false);
                     Map<String,String> map = DBFabric.getDBWorker(context).getRequests(ACT_ID);
+                    ckeckLogin(map.get("result"));
                     Log.d("AuthAct", map.get("result"));
                 }
             }
         };
-        IntentFilter intFilt = new IntentFilter(BROADCAST_ACTION);
+        IntentFilter intFilt = new IntentFilter(Conf.BROADCAST_ACTION);
         registerReceiver(br, intFilt);
-
 	}
 
-	void doLogin(String login, String pass){
+	void sendLogin(String login, String pass){
 
         DBFabric.getDBWorker(this).delRequests(ACT_ID);
         Requester requester = new Requester();
@@ -96,54 +99,36 @@ public class AuthActivity extends Activity {
 	}
 
 	void setVisiblePB(boolean visible){
-		if (visible){
+        button.setEnabled(!visible);
+        button2.setEnabled(!visible);
+        if (visible){
 			progressBar.setVisibility(View.VISIBLE);
 		}else {
 			progressBar.setVisibility(View.INVISIBLE);
 		}
 	}
 
-//	//Класс посылает запрос в другом потоке. Не
-//	class MyTask extends AsyncTask<Map<String,String>, Integer, JSONObject> {
-//		@Override
-//		protected JSONObject doInBackground(Map<String, String>... params) {
-//			try {
-//				Log.i("debug", "Send Post!!!");
-//				return MeetingApi.sendPost(params[0]);
-//
-//			}catch (Exception e){
-//				e.printStackTrace();
-//				return null;
-//			}
-//		}
-//
-//		@Override
-//		protected void onPostExecute(JSONObject response) {
-//			setVisiblePB(false);
-//			if (response == null) {
-//				Log.i("debug", "Error!!!");
-//			}else {
-//                try {
-//                    if (response.getInt("exitCode") == 0) {
-//                        Conf.sessKey = response.getString("sessionKey");
-//                        JSONObject user = (JSONObject) response.get("user");
-//                        Conf.userId = user.getInt("userId");
-//                        Conf.login = loginText.getText().toString();
-//                        Conf.pass = passText.getText().toString();
-//                        Conf.exist = true;
-//                        Log.i("debug", Conf.sessKey);
-//                        showMain();
-//                    }
-//                }catch (Exception e){
-//                    Log.e("error", e.toString());
-//                }
-//			}
-//		}
-//
-//		@Override
-//		protected void onProgressUpdate(Integer... values) {
-//			progressBar.setProgress(values[0]);
-//		}
-//	}
+    void ckeckLogin(String result){
+        try{
+            JSONObject resultJson = new JSONObject(result);
+            if (resultJson.getInt("exitCode") == 0) {
+                Conf.sessKey = resultJson.getString("sessionKey");
+                JSONObject user = (JSONObject) resultJson.get("user");
+                Conf.userId = user.getInt("userId");
+                Conf.login = loginText.getText().toString();
+                Conf.pass = passText.getText().toString();
+                Conf.exist = true;
+                Log.i(LOG_TAG, Conf.sessKey);
+                showMain();
+            }
+        }catch (Exception e){
+            Log.e(LOG_TAG, e.toString());
+        }
+    }
 
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(br);
+        super.onDestroy();
+    }
 }

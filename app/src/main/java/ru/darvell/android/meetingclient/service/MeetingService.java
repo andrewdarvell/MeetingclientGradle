@@ -9,12 +9,12 @@ import ru.darvell.android.meetingclient.AuthActivity;
 import ru.darvell.android.meetingclient.api.MeetingApi;
 import ru.darvell.android.meetingclient.database.DBFabric;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class MeetingService extends Service{
 
     final String LOG_TAG = "meeting_service";
+    Set<Integer> queue = new HashSet<>();
 
     @Override
     public void onCreate() {
@@ -31,10 +31,8 @@ public class MeetingService extends Service{
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(LOG_TAG, "onStartCommand.");
-        Map<String, String> params = new HashMap<>();
         switch (intent.getIntExtra("method", -1)){
-            case MeetingApi.LOGIN:new SenderRequest(MeetingApi.prepareLogin(intent), this, intent.getIntExtra("method", -1),
-                                                        intent.getIntExtra("actId", -1));
+            case MeetingApi.LOGIN : startRequest(intent);
                 break;
         }
         return super.onStartCommand(intent, flags, startId);
@@ -44,6 +42,10 @@ public class MeetingService extends Service{
     public IBinder onBind(Intent intent) {
         Log.d(LOG_TAG, "onBind");
         return null;
+    }
+
+    void startRequest(Intent intent){
+        new SenderRequest(MeetingApi.prepareLogin(intent), this, intent.getIntExtra("method", -1), intent.getIntExtra("actId", -1));
     }
 
     class SenderRequest extends Thread{
@@ -69,6 +71,7 @@ public class MeetingService extends Service{
             Log.d("THREAD", s.toString());
             Intent intent = new Intent(AuthActivity.BROADCAST_ACTION);
             intent.putExtra("actId", act_id);
+            queue.remove(new Integer(type));
             service.sendBroadcast(intent);
             service.stopSelf();
         }
