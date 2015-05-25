@@ -33,7 +33,8 @@ public class MeetingService extends Service{
         Log.d(LOG_TAG, "onStartCommand.");
         Map<String, String> params = new HashMap<>();
         switch (intent.getIntExtra("method", -1)){
-            case MeetingApi.LOGIN:new SenderRequest(MeetingApi.prepareLogin(intent), this, intent.getIntExtra("method", -1), 1);
+            case MeetingApi.LOGIN:new SenderRequest(MeetingApi.prepareLogin(intent), this, intent.getIntExtra("method", -1),
+                                                        intent.getIntExtra("actId", -1));
                 break;
         }
         return super.onStartCommand(intent, flags, startId);
@@ -44,8 +45,6 @@ public class MeetingService extends Service{
         Log.d(LOG_TAG, "onBind");
         return null;
     }
-
-//    Map<String, String> =
 
     class SenderRequest extends Thread{
 
@@ -69,9 +68,8 @@ public class MeetingService extends Service{
             DBFabric.getDBWorker(service).putRequest(s.toString(), type, act_id);
             Log.d("THREAD", s.toString());
             Intent intent = new Intent(AuthActivity.BROADCAST_ACTION);
-            intent.putExtra("actId", 1);
+            intent.putExtra("actId", act_id);
             service.sendBroadcast(intent);
-//            service.sendBroadcast();
             service.stopSelf();
         }
     }

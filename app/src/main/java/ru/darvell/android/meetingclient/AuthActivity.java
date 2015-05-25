@@ -29,6 +29,7 @@ public class AuthActivity extends Activity {
     Context context = this;
 
     public final static String BROADCAST_ACTION = "ru.darvell.android.meetingclient";
+    public final static int ACT_ID = 1;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -62,10 +63,10 @@ public class AuthActivity extends Activity {
         BroadcastReceiver br = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (intent.getIntExtra("actId", -1) == 1){
+                if (intent.getIntExtra("actId", -1) == ACT_ID){
                     Log.d("AuthAct", "gotRequest");
                     setVisiblePB(false);
-                    Map<String,String> map = DBFabric.getDBWorker(context).getRequests(1);
+                    Map<String,String> map = DBFabric.getDBWorker(context).getRequests(ACT_ID);
                     Log.d("AuthAct", map.get("result"));
                 }
             }
@@ -77,9 +78,9 @@ public class AuthActivity extends Activity {
 
 	void doLogin(String login, String pass){
 
-        DBFabric.getDBWorker(this).delRequests(1);
+        DBFabric.getDBWorker(this).delRequests(ACT_ID);
         Requester requester = new Requester();
-        requester.doLogin(this, login, pass);
+        requester.doLogin(this, login, pass, ACT_ID);
 	}
 
 	//Вызывает основную форму приложения
