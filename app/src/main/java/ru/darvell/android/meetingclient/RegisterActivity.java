@@ -100,7 +100,7 @@ public class RegisterActivity extends Activity {
     }
 
 	void doRegister(){
-//		MyTask myTask  = new MyTask();
+        DBFabric.getDBWorker(this).delRequest(ACT_ID);
 		if ((!loginText.getText().toString().equals(""))||
 				(!passText.getText().toString().equals(""))||
 				(!emailText.getText().toString().equals(""))) {
@@ -115,7 +115,7 @@ public class RegisterActivity extends Activity {
                 Requester requester = new Requester();
                 requester.doRegister(this, user, ACT_ID);
             }catch (Exception e){
-
+                Log.d(LOG_TAG, e.toString());
             }
 
 		}else {
@@ -128,46 +128,13 @@ public class RegisterActivity extends Activity {
 
 	}
 
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(br);
+        super.onDestroy();
+    }
+
 	void showLoginForm(){
 		startActivity(new Intent(context, AuthActivity.class));
 	}
-
-//	class MyTask extends AsyncTask<JSONObject, Integer, JSONObject>{
-//
-//		@Override
-//		protected JSONObject doInBackground(JSONObject ... jsonBody) {
-//			try {
-//				Log.i("debug", "Send Get!!!");
-//				return MeetingApi.sendPostJson(jsonBody[0], "auth/register");
-//			}catch (Exception e){
-//				e.printStackTrace();
-//				return null;
-//			}
-//		}
-//
-//		@Override
-//		protected void onPostExecute(JSONObject response) {
-//			if (response == null) {
-//				Toast.makeText(context, "Problem with connection?", Toast.LENGTH_LONG).show();
-//				Log.i("debug", "Error!!!");
-//			}else {
-//				try {
-//                    if (response.getInt("exitСode") == 0) {
-//                        Toast.makeText(context, "Success registered", Toast.LENGTH_LONG).show();
-//                        showLoginForm();
-//                        Log.i("debug", "Success Register");
-//                    } else if (response.get("code").equals("-15")) {
-//                        Toast.makeText(context, "Login already ...", Toast.LENGTH_LONG).show();
-//                    } else if (response.get("code").equals("-16")) {
-//                        Toast.makeText(context, "Email already ...", Toast.LENGTH_LONG).show();
-//                    } else {
-//                        Toast.makeText(context, "I can't register you", Toast.LENGTH_LONG).show();
-//                    }
-//                }catch (Exception e){
-//                    Log.e("requests", e.toString());
-//                }
-//			}
-//		}
-//	}
-
 }

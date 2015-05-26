@@ -25,16 +25,18 @@ public class MeetingApi {
     static Map<Integer, String> urlsString;
     public static final int LOGIN = 1;
     public static final int REGISTER = 2;
+    public static final int ALL_USER_SCHEDULES = 3;
 
     static {
         urlsString = new HashMap<>();
         urlsString.put(LOGIN, "auth");
         urlsString.put(REGISTER, "auth/register");
+        urlsString.put(ALL_USER_SCHEDULES, "schedules/get_all/");
     }
 
 	public static Map<String, String> prepareLogin(Intent intent){
 		Map<String, String> params = new HashMap<String, String>();
-        params.put("method","auth");
+        params.put("method", urlsString.get(LOGIN));
         params.put("apiKey", Conf.apiKey);
         params.put("login", intent.getStringExtra("login"));
         params.put("passw", intent.getStringExtra("pass"));
@@ -45,20 +47,9 @@ public class MeetingApi {
         return urlsString.get(REGISTER);
     }
 
-    public static JSONObject sendRegister(String jsonStr){
-        try {
-            JSONObject jsonObject = new JSONObject(jsonStr);
-            return sendPostJson(jsonObject, "auth/register");
-        }catch (Exception e){
-            Log.d(LOG_TAG, e.toString());
-            return null;
-        }
-    }
-
-    public static Map<String, String> prepareGetAllSchedules(){
+    public static Map<String, String> prepareGetAllSchedules(Intent intent){
         Map<String, String> params = new HashMap<>();
-        params.put("request", "user");
-        params.put("method", "schedules/get_all/"+Conf.userId);
+        params.put("method", urlsString.get(ALL_USER_SCHEDULES)+Conf.userId);
         params.put("sessionKey", Conf.sessKey);
         params.put("apiKey", Conf.apiKey);
         return params;
@@ -72,22 +63,6 @@ public class MeetingApi {
         params.put("apiKey", Conf.apiKey);
         return params;
     }
-
-	public static Map<String, String> parseParams(String str){
-		Map<String, String> result = new HashMap<String, String>();
-		try {
-			String rawPars[] = str.split(";");
-			for (int i = 0; i < rawPars.length-1; i++) {
-				String keyValue[] = rawPars[i].split(":");
-				result.put(keyValue[0], keyValue[1]);
-			}
-			return result;
-		}catch (Exception e){
-			result.put("code", "-1");
-			e.printStackTrace();
-			return result;
-		}
-	}
 
 	public static JSONObject sendPost(Map<String, String> params){
 		try{

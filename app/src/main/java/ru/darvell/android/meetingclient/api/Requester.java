@@ -27,4 +27,13 @@ public class Requester {
         context.startService(intent);
 
     }
+
+    public void doGetAllUserSchedules(Context context, int actId){
+        Intent intent = new Intent(context, MeetingService.class);
+        intent.putExtra("method", MeetingApi.ALL_USER_SCHEDULES);
+        intent.putExtra("actId", actId);
+        context.startService(intent);
+
+    }
+
 }
