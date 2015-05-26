@@ -73,6 +73,12 @@ public class MainActivity extends Activity {
         super.onStart();
         updateDataSource();
     }
+    
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(br);
+        super.onDestroy();
+    }
 
     synchronized void updateDataSource(){
         scheduleAdapter.notifyDataSetChanged();
