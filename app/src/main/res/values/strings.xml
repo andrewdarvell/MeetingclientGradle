@@ -12,4 +12,9 @@
 	<string name="email_title">Email</string>
 	<string name="cancel">Cancel</string>
 	<string name="remind_title">Remind?</string>
+
+	<string name="first_screen">first</string>
+	<string name="action_settings">menu11</string>
+
+
 </resources>

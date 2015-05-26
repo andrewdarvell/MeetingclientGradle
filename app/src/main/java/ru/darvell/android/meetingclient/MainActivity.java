@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
@@ -30,6 +31,7 @@ public class MainActivity extends Activity {
     ListView schedulesList;
     ProgressBar progressBar;
     BroadcastReceiver br;
+    private DrawerLayout mDrawerLayout;
     public final static int ACT_ID = 3;
     final String LOG_TAG = "meeting_main";
 
@@ -73,7 +75,7 @@ public class MainActivity extends Activity {
         super.onStart();
         updateDataSource();
     }
-    
+
     @Override
     protected void onDestroy() {
         unregisterReceiver(br);
