@@ -36,7 +36,7 @@ public class MeetingService extends Service{
         switch (intent.getIntExtra("method", -1)){
             case MeetingApi.LOGIN : startLoginRequest(intent);
                 break;
-            case MeetingApi.REGISTER:
+            case MeetingApi.REGISTER: startRegisterRequest(intent);
         }
         return super.onStartCommand(intent, flags, startId);
     }
@@ -52,7 +52,15 @@ public class MeetingService extends Service{
     }
 
     void startRegisterRequest(Intent intent){
-        new SenderRequest(MeetingApi.prepareLogin(intent), this, intent.getIntExtra("method", -1), intent.getIntExtra("actId", -1));
+        try {
+            new SenderJsonRequest(new JSONObject(intent.getStringExtra("json"))
+                                    ,this
+                                    ,intent.getIntExtra("method", -1)
+                                    ,intent.getIntExtra("actId", -1)
+                                    ,MeetingApi.prepareRegister());
+        }catch (Exception e){
+            Log.d(LOG_TAG, "registerError");
+        }
     }
 
 

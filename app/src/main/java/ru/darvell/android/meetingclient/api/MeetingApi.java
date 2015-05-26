@@ -27,7 +27,9 @@ public class MeetingApi {
     public static final int REGISTER = 2;
 
     static {
-        urlsString.put(LOGIN, "")
+        urlsString = new HashMap<>();
+        urlsString.put(LOGIN, "auth");
+        urlsString.put(REGISTER, "auth/register");
     }
 
 	public static Map<String, String> prepareLogin(Intent intent){
@@ -38,6 +40,10 @@ public class MeetingApi {
         params.put("passw", intent.getStringExtra("pass"));
 		return params;
 	}
+
+    public static String prepareRegister(){
+        return urlsString.get(REGISTER);
+    }
 
     public static JSONObject sendRegister(String jsonStr){
         try {
