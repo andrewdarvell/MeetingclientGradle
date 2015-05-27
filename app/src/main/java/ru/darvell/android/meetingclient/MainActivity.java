@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import org.json.JSONArray;
@@ -31,7 +32,8 @@ public class MainActivity extends Activity {
     ListView schedulesList;
     ProgressBar progressBar;
     BroadcastReceiver br;
-    private DrawerLayout mDrawerLayout;
+    DrawerLayout mDrawerLayout;
+    ListView mDrawerList;
     public final static int ACT_ID = 3;
     final String LOG_TAG = "meeting_main";
 
@@ -45,6 +47,11 @@ public class MainActivity extends Activity {
         scheduleAdapter = new ScheduleAdapter(this, schedulesData);
         schedulesList = (ListView) findViewById(R.id.schedulesList);
         schedulesList.setAdapter(scheduleAdapter);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+        String[] menuStr = {"111", "222"};
+        mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, menuStr));
 
 
         br = new BroadcastReceiver() {
