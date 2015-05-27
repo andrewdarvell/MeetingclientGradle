@@ -1,17 +1,17 @@
 package ru.darvell.android.meetingclient;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.View;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import ru.darvell.android.meetingclient.adapters.ScheduleAdapter;
@@ -24,13 +24,14 @@ import ru.darvell.android.meetingclient.database.DBFabric;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class MainActivity extends Activity {
+public class MainActivity extends ActionBarActivity {
 
 
 	ArrayList<Schedule> schedulesData;
     ScheduleAdapter scheduleAdapter;
     ListView schedulesList;
-    ProgressBar progressBar;
+//    ProgressBar progressBar;
+    MenuItem miActionProgressItem;
     BroadcastReceiver br;
     DrawerLayout mDrawerLayout;
     ListView mDrawerList;
@@ -42,13 +43,14 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
         schedulesData = new ArrayList<>();
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+//        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         scheduleAdapter = new ScheduleAdapter(this, schedulesData);
         schedulesList = (ListView) findViewById(R.id.schedulesList);
         schedulesList.setAdapter(scheduleAdapter);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
+//        progressBar = (ProgressBar) findViewById(R.id.miActionProgress);
 
         String[] menuStr = {"111", "222"};
         mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, menuStr));
@@ -73,15 +75,32 @@ public class MainActivity extends Activity {
         IntentFilter intFilt = new IntentFilter(Conf.BROADCAST_ACTION);
         registerReceiver(br, intFilt);
 
-        getAllSchedulesUser();
+//        getAllSchedulesUser();
 
 	}
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        miActionProgressItem = menu.findItem(R.id.miActionProgress);
+        setVisiblePB(false);
+        getAllSchedulesUser();
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
-        updateDataSource();
+        //getAllSchedulesUser();
     }
+
+
 
     @Override
     protected void onDestroy() {
@@ -96,6 +115,7 @@ public class MainActivity extends Activity {
     void getAllSchedulesUser(){
         new Requester().doGetAllUserSchedules(this, ACT_ID);
         setVisiblePB(true);
+
     }
 
     void updateSchedules(String jsonStr){
@@ -118,9 +138,9 @@ public class MainActivity extends Activity {
 
     void setVisiblePB(boolean visible){
         if (visible){
-            progressBar.setVisibility(View.VISIBLE);
+            miActionProgressItem.setVisible(true);//progressBar.setVisibility(View.VISIBLE);
         }else{
-            progressBar.setVisibility(View.INVISIBLE);
+            miActionProgressItem.setVisible(false);//progressBar.setVisibility(View.INVISIBLE);
         }
     }
 
