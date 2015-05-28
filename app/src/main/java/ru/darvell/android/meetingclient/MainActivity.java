@@ -18,7 +18,7 @@ import ru.darvell.android.meetingclient.adapters.ScheduleAdapter;
 import ru.darvell.android.meetingclient.api.Conf;
 import ru.darvell.android.meetingclient.api.MeetingApi;
 import ru.darvell.android.meetingclient.api.Requester;
-import ru.darvell.android.meetingclient.api.Schedule;
+import ru.darvell.android.meetingclient.api.entitys.Schedule;
 import ru.darvell.android.meetingclient.database.DBFabric;
 
 import java.util.ArrayList;
@@ -30,7 +30,6 @@ public class MainActivity extends ActionBarActivity {
 	ArrayList<Schedule> schedulesData;
     ScheduleAdapter scheduleAdapter;
     ListView schedulesList;
-//    ProgressBar progressBar;
     MenuItem miActionProgressItem;
     BroadcastReceiver br;
     DrawerLayout mDrawerLayout;
@@ -43,14 +42,12 @@ public class MainActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
         schedulesData = new ArrayList<>();
-//        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         scheduleAdapter = new ScheduleAdapter(this, schedulesData);
         schedulesList = (ListView) findViewById(R.id.schedulesList);
         schedulesList.setAdapter(scheduleAdapter);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
-//        progressBar = (ProgressBar) findViewById(R.id.miActionProgress);
 
         String[] menuStr = {"111", "222"};
         mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, menuStr));
@@ -75,8 +72,6 @@ public class MainActivity extends ActionBarActivity {
         IntentFilter intFilt = new IntentFilter(Conf.BROADCAST_ACTION);
         registerReceiver(br, intFilt);
 
-//        getAllSchedulesUser();
-
 	}
 
     @Override
@@ -97,7 +92,6 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        //getAllSchedulesUser();
     }
 
 

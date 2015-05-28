@@ -1,4 +1,4 @@
-package ru.darvell.android.meetingclient.api;
+package ru.darvell.android.meetingclient.api.entitys;
 
 import org.json.JSONObject;
 
