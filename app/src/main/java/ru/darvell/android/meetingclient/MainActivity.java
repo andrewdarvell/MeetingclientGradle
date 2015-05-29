@@ -4,13 +4,18 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -20,12 +25,17 @@ import ru.darvell.android.meetingclient.api.MeetingApi;
 import ru.darvell.android.meetingclient.api.Requester;
 import ru.darvell.android.meetingclient.api.entitys.Schedule;
 import ru.darvell.android.meetingclient.database.DBFabric;
+import ru.darvell.android.meetingclient.utils.FileWorkerFactory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 
 public class MainActivity extends ActionBarActivity {
 
+    public final static int ACT_ID = 3;
+    public final static int REQUEST_IMAGE = 5;
+    final String LOG_TAG = "meeting_main";
 
 	ArrayList<Schedule> schedulesData;
     ScheduleAdapter scheduleAdapter;
@@ -34,8 +44,9 @@ public class MainActivity extends ActionBarActivity {
     BroadcastReceiver br;
     DrawerLayout mDrawerLayout;
     ListView mDrawerList;
-    public final static int ACT_ID = 3;
-    final String LOG_TAG = "meeting_main";
+    ImageView imageAvatar;
+
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -48,10 +59,17 @@ public class MainActivity extends ActionBarActivity {
         schedulesList.setAdapter(scheduleAdapter);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        imageAvatar = (ImageView) findViewById(R.id.imageViewMain);
 
         String[] menuStr = {"111", "222"};
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, menuStr));
+        mDrawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, menuStr));
 
+        imageAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openGallery(REQUEST_IMAGE);
+            }
+        });
 
         br = new BroadcastReceiver() {
             @Override
@@ -83,10 +101,18 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+        FileWorkerFactory.getWorker(this).updateConfig();
         miActionProgressItem = menu.findItem(R.id.miActionProgress);
         setVisiblePB(false);
         getAllSchedulesUser();
         return super.onPrepareOptionsMenu(menu);
+    }
+
+
+    @Override
+    protected void onPause() {
+        FileWorkerFactory.getWorker(this).storeConfig();
+        super.onPause();
     }
 
     @Override
@@ -94,12 +120,18 @@ public class MainActivity extends ActionBarActivity {
         super.onStart();
     }
 
-
-
     @Override
     protected void onDestroy() {
         unregisterReceiver(br);
+        FileWorkerFactory.getWorker(this).storeConfig();
         super.onDestroy();
+    }
+
+    public void openGallery(int req_code){
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select file to upload "), req_code);
     }
 
     synchronized void updateDataSource(){
@@ -124,7 +156,6 @@ public class MainActivity extends ActionBarActivity {
                     updateDataSource();
                 }
             }
-
         }catch (Exception e){
             Log.d(LOG_TAG, e.toString());
         }
@@ -138,4 +169,42 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            Uri selectedImageUri = data.getData();
+            if (requestCode == REQUEST_IMAGE){
+                try {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImageUri);
+                    Bitmap dstBmp;
+                    if (bitmap.getWidth() >= bitmap.getHeight()){
+                        dstBmp = Bitmap.createBitmap(
+                                bitmap,
+                                bitmap.getWidth()/2 - bitmap.getHeight()/2,
+                                0,
+                                bitmap.getHeight(),
+                                bitmap.getHeight()
+                        );
+                    }else{
+                        dstBmp = Bitmap.createBitmap(
+                                bitmap,
+                                0,
+                                bitmap.getHeight()/2 - bitmap.getWidth()/2,
+                                bitmap.getWidth(),
+                                bitmap.getWidth()
+                        );
+                    }
+//                    FileOutputStream fo = openFileOutput("avatar.png", this.MODE_PRIVATE);
+////                    file.createNewFile();
+////                    FileOutputStream ostream = new FileOutputStream(file);
+//                    dstBmp.compress(Bitmap.CompressFormat.PNG, 100, fo);
+//                    fo.close();
+                    imageAvatar.setImageBitmap(dstBmp);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+
+    }
 }

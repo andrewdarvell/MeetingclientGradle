@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import ru.darvell.android.meetingclient.api.Conf;
 import ru.darvell.android.meetingclient.api.Requester;
 import ru.darvell.android.meetingclient.database.DBFabric;
+import ru.darvell.android.meetingclient.utils.FileWorkerFactory;
 
 import java.util.Map;
 
@@ -118,6 +119,7 @@ public class AuthActivity extends Activity {
                 Conf.login = loginText.getText().toString();
                 Conf.pass = passText.getText().toString();
                 Conf.exist = true;
+                FileWorkerFactory.getWorker(this).storeConfig();
                 Log.i(LOG_TAG, Conf.sessKey);
                 showMain();
             }

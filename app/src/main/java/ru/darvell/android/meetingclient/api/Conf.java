@@ -12,7 +12,7 @@ public class Conf {
 	public static String login = "";
 	public static String pass = "";
 
-	public static int userId = 0;
+	public static int userId = -1;
 
 
 
