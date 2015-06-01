@@ -89,12 +89,16 @@ public class MeetingService extends Service{
 
         @Override
         public void run() {
-            JSONObject s = MeetingApi.sendPost(parameters);
-            DBFabric.getDBWorker(service).putRequest(s.toString(), type, act_id);
-            Log.d("THREAD", s.toString());
             Intent intent = new Intent(Conf.BROADCAST_ACTION);
             intent.putExtra("actId", act_id);
-            queue.remove(new Integer(type));
+            JSONObject s = MeetingApi.sendPost(parameters);
+            if (s != null){
+                DBFabric.getDBWorker(service).putRequest(s.toString(), type, act_id);
+                intent.putExtra("result", 0);
+            }else{
+                intent.putExtra("result", -1);
+            }
+//            queue.remove(new Integer(type));
             service.sendBroadcast(intent);
             service.stopSelf();
         }
@@ -125,7 +129,7 @@ public class MeetingService extends Service{
             Log.d("THREAD", s.toString());
             Intent intent = new Intent(Conf.BROADCAST_ACTION);
             intent.putExtra("actId", act_id);
-            queue.remove(new Integer(type));
+//            queue.remove(new Integer(type));
             service.sendBroadcast(intent);
             service.stopSelf();
         }

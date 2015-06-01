@@ -70,9 +70,11 @@ public class AuthActivity extends Activity {
                 if (intent.getIntExtra("actId", -1) == ACT_ID){
                     Log.d("AuthAct", "gotRequest");
                     setVisiblePB(false);
-                    Map<String,String> map = DBFabric.getDBWorker(context).getRequests(ACT_ID);
-                    ckeckLogin(map.get("result"));
-                    Log.d("AuthAct", map.get("result"));
+                    if (intent.getIntExtra("result", -2) == 0){
+                        Map<String,String> map = DBFabric.getDBWorker(context).getRequests(ACT_ID);
+                        ckeckLogin(map.get("result"));
+                        Log.d("AuthAct", map.get("result"));
+                    }
                 }
             }
         };

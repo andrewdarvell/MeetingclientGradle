@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -27,6 +28,8 @@ import ru.darvell.android.meetingclient.api.entitys.Schedule;
 import ru.darvell.android.meetingclient.database.DBFabric;
 import ru.darvell.android.meetingclient.utils.FileWorkerFactory;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
@@ -101,7 +104,6 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        FileWorkerFactory.getWorker(this).updateConfig();
         miActionProgressItem = menu.findItem(R.id.miActionProgress);
         setVisiblePB(false);
         getAllSchedulesUser();
@@ -117,6 +119,7 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onStart() {
+        FileWorkerFactory.getWorker(this).updateConfig();
         super.onStart();
     }
 
@@ -134,7 +137,7 @@ public class MainActivity extends ActionBarActivity {
         startActivityForResult(Intent.createChooser(intent, "Select file to upload "), req_code);
     }
 
-    synchronized void updateDataSource(){
+    public void updateDataSource(){
         scheduleAdapter.notifyDataSetChanged();
     }
 
@@ -159,6 +162,17 @@ public class MainActivity extends ActionBarActivity {
         }catch (Exception e){
             Log.d(LOG_TAG, e.toString());
         }
+    }
+
+    void updateAvatar(){
+        File mediaStorageDir = new File(Environment.getExternalStorageDirectory()
+                + "/Android/data/"
+                + getApplicationContext().getPackageName()
+                + "/Files");
+        if (mediaStorageDir.exists()){
+
+        }
+
     }
 
     void setVisiblePB(boolean visible){
@@ -193,18 +207,24 @@ public class MainActivity extends ActionBarActivity {
                                 bitmap.getWidth()
                         );
                     }
-//                    FileOutputStream fo = openFileOutput("avatar.png", this.MODE_PRIVATE);
-////                    file.createNewFile();
-////                    FileOutputStream ostream = new FileOutputStream(file);
-//                    dstBmp.compress(Bitmap.CompressFormat.PNG, 100, fo);
-//                    fo.close();
-                    imageAvatar.setImageBitmap(dstBmp);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
 
+                    imageAvatar.setImageBitmap(dstBmp);
+//                    FileOutputStream fo = openFileOutput("avatar.jpg", this.MODE_PRIVATE);
+
+                    File mediaStorageDir = new File(Environment.getExternalStorageDirectory()
+                            + "/Android/data/"
+                            + getApplicationContext().getPackageName()
+                            + "/Files/avatar.jpg");
+                    FileOutputStream fo = new FileOutputStream(mediaStorageDir);
+                    dstBmp.compress(Bitmap.CompressFormat.JPEG, 50, fo);
+
+                    fo.flush();
+                    fo.close();
+
+                } catch (IOException e) {
+                    Log.d(LOG_TAG, e.toString());
+                }
             }
         }
-
     }
 }
