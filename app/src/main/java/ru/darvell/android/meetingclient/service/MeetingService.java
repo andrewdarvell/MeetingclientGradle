@@ -40,6 +40,8 @@ public class MeetingService extends Service{
                 break;
             case MeetingApi.ALL_USER_SCHEDULES: startGetAllUserSchedulesRequest(intent);
                 break;
+            case MeetingApi.USER_INFO: startUserInfoRequest(intent);
+                break;
         }
         return super.onStartCommand(intent, flags, startId);
     }
@@ -56,6 +58,10 @@ public class MeetingService extends Service{
 
     void startGetAllUserSchedulesRequest(Intent intent){
         new SenderRequest(MeetingApi.prepareGetAllSchedules(intent), this, intent.getIntExtra("method", -1), intent.getIntExtra("actId", -1));
+    }
+
+    void startUserInfoRequest(Intent intent){
+        new SenderRequest(MeetingApi.prepareUpdateUser(intent), this, intent.getIntExtra("method", -1), intent.getIntExtra("actId", -1));
     }
 
     void startRegisterRequest(Intent intent){

@@ -26,12 +26,14 @@ public class MeetingApi {
     public static final int LOGIN = 1;
     public static final int REGISTER = 2;
     public static final int ALL_USER_SCHEDULES = 3;
+    public static final int USER_INFO = 4;
 
     static {
         urlsString = new HashMap<>();
         urlsString.put(LOGIN, "auth");
         urlsString.put(REGISTER, "auth/register");
         urlsString.put(ALL_USER_SCHEDULES, "schedules/get_all/");
+        urlsString.put(USER_INFO, "user/get_info/");
     }
 
 	public static Map<String, String> prepareLogin(Intent intent){
@@ -55,10 +57,18 @@ public class MeetingApi {
         return params;
     }
 
-    public static Map<String, String> prepareGetAllSchedulesFriends(){
+//    public static Map<String, String> prepareGetAllSchedulesFriends(){
+//        Map<String, String> params = new HashMap<>();
+//        params.put("request", "friends");
+//        params.put("method", "schedules/get_all/"+Conf.userId);
+//        params.put("sessionKey", Conf.sessKey);
+//        params.put("apiKey", Conf.apiKey);
+//        return params;
+//    }
+
+    public static Map<String, String> prepareUpdateUser(Intent intent){
         Map<String, String> params = new HashMap<>();
-        params.put("request", "friends");
-        params.put("method", "schedules/get_all/"+Conf.userId);
+        params.put("method", urlsString.get(USER_INFO)+Conf.userId);
         params.put("sessionKey", Conf.sessKey);
         params.put("apiKey", Conf.apiKey);
         return params;

@@ -120,6 +120,7 @@ public class AuthActivity extends Activity {
                 Conf.userId = user.getInt("userId");
                 Conf.login = loginText.getText().toString();
                 Conf.pass = passText.getText().toString();
+                Conf.email = user.getString("email");
                 Conf.exist = true;
                 FileWorkerFactory.getWorker(this).storeConfig();
                 Log.i(LOG_TAG, Conf.sessKey);

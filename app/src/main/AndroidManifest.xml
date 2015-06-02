@@ -19,6 +19,7 @@
 		</activity>
 		<activity android:name=".MainActivity"/>
 		<activity android:name=".RegisterActivity"/>
+		<activity android:name=".FriendsActivity"/>
 		<service android:name=".service.MeetingService"></service>
 	</application>
 	<uses-permission android:name="android.permission.INTERNET"/>

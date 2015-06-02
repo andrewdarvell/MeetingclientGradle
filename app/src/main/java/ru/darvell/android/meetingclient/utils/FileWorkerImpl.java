@@ -28,6 +28,7 @@ public class FileWorkerImpl implements FileWorker {
             bw.write("pass:"+Conf.pass+"\n");
             bw.write("login:"+Conf.login+"\n");
             bw.write("sessKey:"+Conf.sessKey+"\n");
+            bw.write("email:"+Conf.email+"\n");
             bw.close();
             Log.d(LOG_TAG, "Файл записан");
         } catch (FileNotFoundException e) {
@@ -54,6 +55,8 @@ public class FileWorkerImpl implements FileWorker {
                     case "login":Conf.login = str.split(":")[1];
                         break;
                     case "sessKey":Conf.sessKey = str.split(":")[1];
+                        break;
+                    case "email":Conf.email = str.split(":")[1];
                         break;
                 }
             }

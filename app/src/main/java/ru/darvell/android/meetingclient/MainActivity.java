@@ -15,9 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
+import android.widget.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import ru.darvell.android.meetingclient.adapters.ScheduleAdapter;
@@ -49,6 +47,9 @@ public class MainActivity extends ActionBarActivity {
     ListView mDrawerList;
     ImageView imageAvatar;
 
+    TextView idText;
+    TextView loginText;
+    TextView emailText;
 
 
 	@Override
@@ -64,8 +65,14 @@ public class MainActivity extends ActionBarActivity {
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         imageAvatar = (ImageView) findViewById(R.id.imageViewMain);
 
+        idText = (TextView) findViewById(R.id.main_id);
+        loginText = (TextView) findViewById(R.id.main_login);
+        emailText = (TextView) findViewById(R.id.main_email);
+
         String[] menuStr = {"111", "222"};
         mDrawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, menuStr));
+
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         imageAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,6 +92,10 @@ public class MainActivity extends ActionBarActivity {
                     switch (type){
                         case MeetingApi.ALL_USER_SCHEDULES: updateSchedules(map.get("result"));
                             break;
+                        case MeetingApi.USER_INFO: Conf.UpdateFromJson(map.get("result"));
+                                                    drawUserOnForm();
+
+                            break;
                     }
                     Log.d(LOG_TAG, map.get("result"));
                 }
@@ -92,13 +103,14 @@ public class MainActivity extends ActionBarActivity {
         };
         IntentFilter intFilt = new IntentFilter(Conf.BROADCAST_ACTION);
         registerReceiver(br, intFilt);
+        drawUserOnForm();
+
 
 	}
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
-
         return true;
     }
 
@@ -107,6 +119,14 @@ public class MainActivity extends ActionBarActivity {
         miActionProgressItem = menu.findItem(R.id.miActionProgress);
         setVisiblePB(false);
         getAllSchedulesUser();
+        miActionProgressItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                getAllSchedulesUser();
+                updateUserInfo();
+                return false;
+            }
+        });
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -120,6 +140,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onStart() {
         FileWorkerFactory.getWorker(this).updateConfig();
+
         super.onStart();
     }
 
@@ -137,14 +158,23 @@ public class MainActivity extends ActionBarActivity {
         startActivityForResult(Intent.createChooser(intent, "Select file to upload "), req_code);
     }
 
+    public void drawUserOnForm(){
+        loginText.setText(Conf.login);
+        idText.setText(String.valueOf(Conf.userId));
+        emailText.setText(Conf.email);
+    }
+
     public void updateDataSource(){
         scheduleAdapter.notifyDataSetChanged();
+    }
+
+    void updateUserInfo(){
+        new Requester().doGetUserInfo(this, ACT_ID, Conf.userId);
     }
 
     void getAllSchedulesUser(){
         new Requester().doGetAllUserSchedules(this, ACT_ID);
         setVisiblePB(true);
-
     }
 
     void updateSchedules(String jsonStr){
@@ -226,5 +256,20 @@ public class MainActivity extends ActionBarActivity {
                 }
             }
         }
+    }
+
+    private class DrawerItemClickListener implements ListView.OnItemClickListener{
+
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            switch (i){
+                case 1: openFriends();
+                    break;
+            }
+        }
+    }
+
+    private void openFriends(){
+        ActivityWorker.showFriends(this);
     }
 }
