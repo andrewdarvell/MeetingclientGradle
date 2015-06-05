@@ -1,5 +1,6 @@
 package ru.darvell.android.meetingclient.database;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -15,12 +16,16 @@ public class DBWorkerImpl implements DBWorker{
         this.context = context;
     }
 
-    public void putRequest(String result, int type, int act_id ){
-        String sql = "INSERT INTO requests(result, type, act_id)" +
-                    "VALUES (\'"+result+"\',"+type+","+act_id+")";
+    public long putRequest(String result, int type, int act_id ){
+
         SQLiteDatabase sqLiteDatabase = getDBHelper();
-        sqLiteDatabase.execSQL(sql);
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("result", result);
+        contentValues.put("type", type);
+        contentValues.put("act_id", act_id);
+        long id = sqLiteDatabase.insert("requests", null, contentValues);
         sqLiteDatabase.close();
+        return id;
     }
 
     public Map<String, String> getRequests(int act_id){
@@ -40,7 +45,7 @@ public class DBWorkerImpl implements DBWorker{
         return result;
     }
 
-    public void delRequest(int id){
+    public void delRequest(long id){
         String sql = "DELETE FROM requests WHERE id = "+id;
         SQLiteDatabase sqLiteDatabase = getDBHelper();
         sqLiteDatabase.execSQL(sql);

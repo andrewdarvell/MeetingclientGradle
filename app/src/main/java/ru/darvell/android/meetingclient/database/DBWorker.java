@@ -4,8 +4,8 @@ import java.util.Map;
 
 public interface DBWorker {
 
-    void putRequest(String result, int type, int act_id );
+    long putRequest(String result, int type, int act_id );
     Map<String, String> getRequests(int act_id);
-    void delRequest(int id);
+    void delRequest(long id);
     void delRequests(int atc_id);
 }

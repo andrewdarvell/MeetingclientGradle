@@ -31,6 +31,7 @@ public class AuthActivity extends Activity {
     Button button2;
 
     BroadcastReceiver br;
+    Context context;
 
     final String LOG_TAG = "meeting_auth";
     public final static int ACT_ID = 1;
@@ -39,7 +40,7 @@ public class AuthActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.authlayout);
-
+        context = this;
 		button = (Button) findViewById(R.id.button);
 		button2 = (Button) findViewById(R.id.button2);
 		progressBar = (ProgressBar) findViewById(R.id.progressBar1);
@@ -71,9 +72,11 @@ public class AuthActivity extends Activity {
                     Log.d("AuthAct", "gotRequest");
                     setVisiblePB(false);
                     if (intent.getIntExtra("result", -2) == 0){
+//                        Log.d(LOG_TAG, "id = "+intent.getLongExtra("id", -10));
                         Map<String,String> map = DBFabric.getDBWorker(context).getRequests(ACT_ID);
+                        DBFabric.getDBWorker(context).delRequest(intent.getLongExtra("id", -10));
                         ckeckLogin(map.get("result"));
-                        Log.d("AuthAct", map.get("result"));
+//                        Log.d("AuthAct", map.get("result"));
                     }
                 }
             }
@@ -85,8 +88,7 @@ public class AuthActivity extends Activity {
 	void sendLogin(String login, String pass){
 
         DBFabric.getDBWorker(this).delRequests(ACT_ID);
-        Requester requester = new Requester();
-        requester.doLogin(this, login, pass, ACT_ID);
+        new Requester().doLogin(this, login, pass, ACT_ID);
 	}
 
 	//Вызывает основную форму приложения

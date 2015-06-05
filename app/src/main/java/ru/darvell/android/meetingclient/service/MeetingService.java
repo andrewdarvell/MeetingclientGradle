@@ -98,13 +98,15 @@ public class MeetingService extends Service{
             Intent intent = new Intent(Conf.BROADCAST_ACTION);
             intent.putExtra("actId", act_id);
             JSONObject s = MeetingApi.sendPost(parameters);
+            long id = -10;
             if (s != null){
-                DBFabric.getDBWorker(service).putRequest(s.toString(), type, act_id);
+                id = DBFabric.getDBWorker(service).putRequest(s.toString(), type, act_id);
                 intent.putExtra("result", 0);
             }else{
                 intent.putExtra("result", -1);
             }
 //            queue.remove(new Integer(type));
+            intent.putExtra("id", id);
             service.sendBroadcast(intent);
             service.stopSelf();
         }
