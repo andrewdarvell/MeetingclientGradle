@@ -1,4 +1,4 @@
-package ru.darvell.android.meetingclient;
+package ru.darvell.android.meetingclient.activitys;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import ru.darvell.android.meetingclient.R;
 import ru.darvell.android.meetingclient.adapters.ScheduleAdapter;
 import ru.darvell.android.meetingclient.api.Conf;
 import ru.darvell.android.meetingclient.api.MeetingApi;
@@ -151,6 +152,16 @@ public class MainActivity extends ActionBarActivity {
         super.onDestroy();
     }
 
+    @Override
+    protected void onResume() {
+        FileWorkerFactory.getWorker(this).updateConfig();
+        super.onResume();
+    }
+
+    /**
+     * Показывает галерею для выбора изображения
+     * @param req_code
+     */
     public void openGallery(int req_code){
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -158,20 +169,32 @@ public class MainActivity extends ActionBarActivity {
         startActivityForResult(Intent.createChooser(intent, "Select file to upload "), req_code);
     }
 
+    /**
+     * Выводит информацю о пользователе на форму
+     */
     public void drawUserOnForm(){
         loginText.setText(Conf.login);
         idText.setText(String.valueOf(Conf.userId));
         emailText.setText(Conf.email);
     }
 
+    /**
+     * Обновление списка с расписаниями
+     */
     public void updateDataSource(){
         scheduleAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * Получение информации о пользователе с сервера
+     */
     void updateUserInfo(){
         new Requester().doGetUserInfo(this, ACT_ID, Conf.userId);
     }
 
+    /**
+     * Получение списка с расписанием пользователя с сервера
+     */
     void getAllSchedulesUser(){
         new Requester().doGetAllUserSchedules(this, ACT_ID);
         setVisiblePB(true);
@@ -205,14 +228,24 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
+    /**
+     * Установка видимости прогресс бара
+     * @param visible
+     */
     void setVisiblePB(boolean visible){
         if (visible){
-            miActionProgressItem.setVisible(true);//progressBar.setVisibility(View.VISIBLE);
+            miActionProgressItem.setVisible(true);
         }else{
-            miActionProgressItem.setVisible(false);//progressBar.setVisibility(View.INVISIBLE);
+            miActionProgressItem.setVisible(false);
         }
     }
 
+    /**
+     * Обработка ответа от вызова галереи
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             Uri selectedImageUri = data.getData();

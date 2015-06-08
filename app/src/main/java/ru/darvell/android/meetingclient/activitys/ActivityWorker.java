@@ -1,4 +1,4 @@
-package ru.darvell.android.meetingclient;
+package ru.darvell.android.meetingclient.activitys;
 
 import android.content.Context;
 import android.content.Intent;

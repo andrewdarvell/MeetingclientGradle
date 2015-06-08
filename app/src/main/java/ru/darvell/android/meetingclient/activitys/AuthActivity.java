@@ -1,4 +1,4 @@
-package ru.darvell.android.meetingclient;
+package ru.darvell.android.meetingclient.activitys;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -11,9 +11,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import org.json.JSONException;
 import org.json.JSONObject;
+import ru.darvell.android.meetingclient.R;
 import ru.darvell.android.meetingclient.api.Conf;
 import ru.darvell.android.meetingclient.api.Requester;
+import ru.darvell.android.meetingclient.api.entitys.MainUser;
 import ru.darvell.android.meetingclient.database.DBFabric;
 import ru.darvell.android.meetingclient.utils.FileWorkerFactory;
 
@@ -75,7 +78,7 @@ public class AuthActivity extends Activity {
 //                        Log.d(LOG_TAG, "id = "+intent.getLongExtra("id", -10));
                         Map<String,String> map = DBFabric.getDBWorker(context).getRequests(ACT_ID);
                         DBFabric.getDBWorker(context).delRequest(intent.getLongExtra("id", -10));
-                        ckeckLogin(map.get("result"));
+                        checkLogin(map.get("result"));
 //                        Log.d("AuthAct", map.get("result"));
                     }
                 }
@@ -113,22 +116,31 @@ public class AuthActivity extends Activity {
 		}
 	}
 
-    void ckeckLogin(String result){
+    void checkLogin(String result){
         try{
             JSONObject resultJson = new JSONObject(result);
             if (resultJson.getInt("exitCode") == 0) {
-                Conf.sessKey = resultJson.getString("sessionKey");
                 JSONObject user = (JSONObject) resultJson.get("user");
-                Conf.userId = user.getInt("userId");
-                Conf.login = loginText.getText().toString();
-                Conf.pass = passText.getText().toString();
-                Conf.email = user.getString("email");
-                Conf.exist = true;
+                MainUser mainUser = new MainUser(
+                                        user.getLong("userId"),
+                                        loginText.getText().toString(),
+                                        passText.getText().toString(),
+                                        resultJson.getString("sessionKey"),
+                                        user.getString("email")
+                                    );
+
+
+//                Conf.userId = user.getInt("userId");
+//                Conf.login = loginText.getText().toString();
+//                Conf.pass = passText.getText().toString();
+//                Conf.email = user.getString("email");
+//                Conf.exist = true;
+
                 FileWorkerFactory.getWorker(this).storeConfig();
                 Log.i(LOG_TAG, Conf.sessKey);
                 showMain();
             }
-        }catch (Exception e){
+        }catch (JSONException e){
             Log.e(LOG_TAG, e.toString());
         }
     }

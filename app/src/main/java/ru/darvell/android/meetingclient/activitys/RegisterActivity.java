@@ -1,4 +1,4 @@
-package ru.darvell.android.meetingclient;
+package ru.darvell.android.meetingclient.activitys;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import org.json.JSONObject;
+import ru.darvell.android.meetingclient.R;
 import ru.darvell.android.meetingclient.api.Conf;
 import ru.darvell.android.meetingclient.api.Requester;
 import ru.darvell.android.meetingclient.database.DBFabric;
@@ -67,7 +68,7 @@ public class RegisterActivity extends Activity {
                     Log.d(LOG_TAG, "gotRequest");
 //                    setVisiblePB(false);
                     Map<String,String> map = DBFabric.getDBWorker(context).getRequests(ACT_ID);
-//                    ckeckLogin(map.get("result"));
+//                    checkLogin(map.get("result"));
                     Log.d(LOG_TAG, map.get("result"));
                     processingRegister(map.get("result"));
 

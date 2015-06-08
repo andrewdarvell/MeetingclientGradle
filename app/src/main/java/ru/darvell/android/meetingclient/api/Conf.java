@@ -12,8 +12,6 @@ public class Conf {
     public final static String BROADCAST_ACTION = "ru.darvell.android.meetingclient";
 
 	public static String sessKey = "";
-
-	public static boolean exist = false;
 	public static String login = "";
 	public static String pass = "";
 	public static String email = "";
@@ -31,8 +29,4 @@ public class Conf {
             e.printStackTrace();
         }
     }
-
-
-
-
 }

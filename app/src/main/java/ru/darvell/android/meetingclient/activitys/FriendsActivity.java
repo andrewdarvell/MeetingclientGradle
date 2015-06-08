@@ -1,10 +1,11 @@
-package ru.darvell.android.meetingclient;
+package ru.darvell.android.meetingclient.activitys;
 
 import android.content.BroadcastReceiver;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.widget.ListView;
+import ru.darvell.android.meetingclient.R;
 import ru.darvell.android.meetingclient.adapters.MembersAdapter;
 import ru.darvell.android.meetingclient.api.entitys.Member;
 
