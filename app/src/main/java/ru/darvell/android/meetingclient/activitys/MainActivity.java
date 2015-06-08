@@ -23,6 +23,7 @@ import ru.darvell.android.meetingclient.adapters.ScheduleAdapter;
 import ru.darvell.android.meetingclient.api.Conf;
 import ru.darvell.android.meetingclient.api.MeetingApi;
 import ru.darvell.android.meetingclient.api.Requester;
+import ru.darvell.android.meetingclient.api.entitys.MainUser;
 import ru.darvell.android.meetingclient.api.entitys.Schedule;
 import ru.darvell.android.meetingclient.database.DBFabric;
 import ru.darvell.android.meetingclient.utils.FileWorkerFactory;
@@ -47,6 +48,7 @@ public class MainActivity extends ActionBarActivity {
     DrawerLayout mDrawerLayout;
     ListView mDrawerList;
     ImageView imageAvatar;
+    MainUser mainUser = new MainUser();
 
     TextView idText;
     TextView loginText;
@@ -57,6 +59,9 @@ public class MainActivity extends ActionBarActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+
+        mainUser.loadMainUser(this);
+
         schedulesData = new ArrayList<>();
 
         scheduleAdapter = new ScheduleAdapter(this, schedulesData);
@@ -93,9 +98,8 @@ public class MainActivity extends ActionBarActivity {
                     switch (type){
                         case MeetingApi.ALL_USER_SCHEDULES: updateSchedules(map.get("result"));
                             break;
-                        case MeetingApi.USER_INFO: Conf.UpdateFromJson(map.get("result"));
+                        case MeetingApi.USER_INFO: mainUser.UpdateFromJson(map.get("result"));
                                                     drawUserOnForm();
-
                             break;
                     }
                     Log.d(LOG_TAG, map.get("result"));
@@ -134,27 +138,26 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onPause() {
-        FileWorkerFactory.getWorker(this).storeConfig();
+        mainUser.saveMainUser(this);
         super.onPause();
     }
 
     @Override
     protected void onStart() {
-        FileWorkerFactory.getWorker(this).updateConfig();
-
+        mainUser.loadMainUser(this);
         super.onStart();
     }
 
     @Override
     protected void onDestroy() {
         unregisterReceiver(br);
-        FileWorkerFactory.getWorker(this).storeConfig();
+        mainUser.saveMainUser(this);
         super.onDestroy();
     }
 
     @Override
     protected void onResume() {
-        FileWorkerFactory.getWorker(this).updateConfig();
+        mainUser.loadMainUser(this);
         super.onResume();
     }
 
@@ -173,9 +176,9 @@ public class MainActivity extends ActionBarActivity {
      * Выводит информацю о пользователе на форму
      */
     public void drawUserOnForm(){
-        loginText.setText(Conf.login);
-        idText.setText(String.valueOf(Conf.userId));
-        emailText.setText(Conf.email);
+        loginText.setText(mainUser.getLogin());
+        idText.setText(String.valueOf(mainUser.getUserId()));
+        emailText.setText(mainUser.getEmail());
     }
 
     /**
@@ -189,7 +192,7 @@ public class MainActivity extends ActionBarActivity {
      * Получение информации о пользователе с сервера
      */
     void updateUserInfo(){
-        new Requester().doGetUserInfo(this, ACT_ID, Conf.userId);
+        new Requester().doGetUserInfo(this, ACT_ID, mainUser.getUserId());
     }
 
     /**

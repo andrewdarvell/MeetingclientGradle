@@ -93,7 +93,7 @@ public class MeetingApi {
 			String responseRaw = httpclient.execute(httpPost, new BasicResponseHandler());
 			return new JSONObject(responseRaw);
 		}catch (Exception e){
-			e.printStackTrace();
+			Log.e(LOG_TAG, e.toString());
 			return null;
 		}
 	}

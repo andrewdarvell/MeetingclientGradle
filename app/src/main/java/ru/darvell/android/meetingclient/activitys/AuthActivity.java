@@ -18,6 +18,7 @@ import ru.darvell.android.meetingclient.api.Conf;
 import ru.darvell.android.meetingclient.api.Requester;
 import ru.darvell.android.meetingclient.api.entitys.MainUser;
 import ru.darvell.android.meetingclient.database.DBFabric;
+import ru.darvell.android.meetingclient.service.MeetingService;
 import ru.darvell.android.meetingclient.utils.FileWorkerFactory;
 
 import java.util.Map;
@@ -72,14 +73,12 @@ public class AuthActivity extends Activity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (intent.getIntExtra("actId", -1) == ACT_ID){
-                    Log.d("AuthAct", "gotRequest");
+                    Log.d(LOG_TAG, "gotRequest");
                     setVisiblePB(false);
                     if (intent.getIntExtra("result", -2) == 0){
-//                        Log.d(LOG_TAG, "id = "+intent.getLongExtra("id", -10));
                         Map<String,String> map = DBFabric.getDBWorker(context).getRequests(ACT_ID);
                         DBFabric.getDBWorker(context).delRequest(intent.getLongExtra("id", -10));
                         checkLogin(map.get("result"));
-//                        Log.d("AuthAct", map.get("result"));
                     }
                 }
             }
@@ -89,7 +88,6 @@ public class AuthActivity extends Activity {
 	}
 
 	void sendLogin(String login, String pass){
-
         DBFabric.getDBWorker(this).delRequests(ACT_ID);
         new Requester().doLogin(this, login, pass, ACT_ID);
 	}
@@ -128,16 +126,8 @@ public class AuthActivity extends Activity {
                                         resultJson.getString("sessionKey"),
                                         user.getString("email")
                                     );
-
-
-//                Conf.userId = user.getInt("userId");
-//                Conf.login = loginText.getText().toString();
-//                Conf.pass = passText.getText().toString();
-//                Conf.email = user.getString("email");
-//                Conf.exist = true;
-
-                FileWorkerFactory.getWorker(this).storeConfig();
-                Log.i(LOG_TAG, Conf.sessKey);
+                mainUser.saveMainUser(this);
+                Log.i(LOG_TAG, mainUser.getsessionKey());
                 showMain();
             }
         }catch (JSONException e){
@@ -148,6 +138,7 @@ public class AuthActivity extends Activity {
     @Override
     protected void onDestroy() {
         unregisterReceiver(br);
+        stopService(new Intent(this, MeetingService.class));
         super.onDestroy();
     }
 }
