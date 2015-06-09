@@ -7,6 +7,7 @@ import android.util.Log;
 import org.json.JSONObject;
 import ru.darvell.android.meetingclient.api.Conf;
 import ru.darvell.android.meetingclient.api.MeetingApi;
+import ru.darvell.android.meetingclient.api.entitys.EntityFactory;
 import ru.darvell.android.meetingclient.database.DBFabric;
 
 import java.util.HashSet;
@@ -57,11 +58,12 @@ public class MeetingService extends Service{
     }
 
     void startGetAllUserSchedulesRequest(Intent intent){
-        new SenderRequest(MeetingApi.prepareGetAllSchedules(intent), this, intent.getIntExtra("method", -1), intent.getIntExtra("actId", -1));
+
+        new SenderRequest(MeetingApi.prepareGetAllSchedules(intent, EntityFactory.getMainUser(this)), this, intent.getIntExtra("method", -1), intent.getIntExtra("actId", -1));
     }
 
     void startUserInfoRequest(Intent intent){
-        new SenderRequest(MeetingApi.prepareUpdateUser(intent), this, intent.getIntExtra("method", -1), intent.getIntExtra("actId", -1));
+        new SenderRequest(MeetingApi.prepareUpdateUser(intent, EntityFactory.getMainUser(this)), this, intent.getIntExtra("method", -1), intent.getIntExtra("actId", -1));
     }
 
     void startRegisterRequest(Intent intent){

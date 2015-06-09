@@ -12,6 +12,7 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
+import ru.darvell.android.meetingclient.api.entitys.MainUser;
 
 import java.util.*;
 
@@ -49,10 +50,10 @@ public class MeetingApi {
         return urlsString.get(REGISTER);
     }
 
-    public static Map<String, String> prepareGetAllSchedules(Intent intent){
+    public static Map<String, String> prepareGetAllSchedules(Intent intent, MainUser mainUser){
         Map<String, String> params = new HashMap<>();
-        params.put("method", urlsString.get(ALL_USER_SCHEDULES)+Conf.userId);
-        params.put("sessionKey", Conf.sessKey);
+        params.put("method", urlsString.get(ALL_USER_SCHEDULES)+mainUser.getUserId());
+        params.put("sessionKey", mainUser.getsessionKey());
         params.put("apiKey", Conf.apiKey);
         return params;
     }
@@ -66,10 +67,10 @@ public class MeetingApi {
 //        return params;
 //    }
 
-    public static Map<String, String> prepareUpdateUser(Intent intent){
+    public static Map<String, String> prepareUpdateUser(Intent intent, MainUser mainUser){
         Map<String, String> params = new HashMap<>();
-        params.put("method", urlsString.get(USER_INFO)+Conf.userId);
-        params.put("sessionKey", Conf.sessKey);
+        params.put("method", urlsString.get(USER_INFO)+mainUser.getUserId());
+        params.put("sessionKey", mainUser.getsessionKey());
         params.put("apiKey", Conf.apiKey);
         return params;
     }
