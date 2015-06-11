@@ -26,7 +26,6 @@ import ru.darvell.android.meetingclient.api.Requester;
 import ru.darvell.android.meetingclient.api.entitys.MainUser;
 import ru.darvell.android.meetingclient.api.entitys.Schedule;
 import ru.darvell.android.meetingclient.database.DBFabric;
-import ru.darvell.android.meetingclient.utils.FileWorkerFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -61,6 +60,7 @@ public class MainActivity extends ActionBarActivity {
 		setContentView(R.layout.main);
 
         mainUser.loadMainUser(this);
+        Log.d(LOG_TAG, mainUser.toString());
 
         schedulesData = new ArrayList<>();
 

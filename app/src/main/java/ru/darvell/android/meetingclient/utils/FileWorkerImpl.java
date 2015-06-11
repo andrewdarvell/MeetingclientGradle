@@ -35,19 +35,24 @@ public class FileWorkerImpl implements FileWorker {
 
     @Override
     public String readString() {
-        String str = "";
+        String str = "11";
+        Log.d(LOG_TAG, "Start reading file");
         try {
             // открываем поток для чтения
             BufferedReader br = new BufferedReader(new InputStreamReader(
                     context.openFileInput(FILENAME)));
             // читаем содержимое
-            while ((str = br.readLine()) != null) {}
+            str = br.readLine();
+            if (str == null){
+                Log.d(LOG_TAG,"Null string");
+            }
+            Log.d(LOG_TAG, str);
             br.close();
-        } catch (FileNotFoundException e) {
-            Log.e(LOG_TAG, e.toString());
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(LOG_TAG, e.toString());
         }
+
+        Log.d(LOG_TAG, str);
         return str;
     }
 

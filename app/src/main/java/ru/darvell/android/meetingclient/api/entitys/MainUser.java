@@ -110,10 +110,23 @@ public class MainUser {
         try {
             JSONObject jsonObject = new JSONObject(rawJson);
             JSONObject user = jsonObject.getJSONObject("user");
+            userId = jsonObject.getLong("userId");
             login = jsonObject.getString("login");
             email = user.getString("email");
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.toString());
         }
+    }
+
+    @Override
+    public String toString() {
+        return "MainUser{" +
+                "LOG_TAG='" + LOG_TAG + '\'' +
+                ", userId=" + userId +
+                ", login='" + login + '\'' +
+                ", pass='" + pass + '\'' +
+                ", sessionKey='" + sessionKey + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 }

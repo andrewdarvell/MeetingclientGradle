@@ -33,6 +33,13 @@
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="Small Text"
+                        android:id="@+id/scheduleMemberLogin"/>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:text="Large Text"
                         android:id="@+id/scheduleTitle"/>
@@ -43,6 +50,7 @@
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:text="Medium Text"
                         android:id="@+id/scheduleComment"/>
+
             </LinearLayout>
 
             <LinearLayout

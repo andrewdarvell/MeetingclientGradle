@@ -15,7 +15,7 @@ public class Member {
     }
 
     public Member(JSONObject member) throws Exception{
-        id = member.getInt("id");
+        id = member.getInt("userId");
         login = member.getString("login");
         email = member.getString("email");
     }

@@ -13,6 +13,8 @@ public class Schedule {
     private String comment;
     private long userId;
 
+    private Member member;
+
     public Schedule() {
     }
 
@@ -32,6 +34,7 @@ public class Schedule {
         this.comment = jsonObject.getString("comment");
         this.title = jsonObject.getString("title");
         this.userId = jsonObject.getInt("userId");
+        member = new Member(jsonObject.getJSONObject("user"));
 
     }
 
@@ -81,6 +84,14 @@ public class Schedule {
 
     public void setUserId(long userId) {
         this.userId = userId;
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
     }
 
     @Override

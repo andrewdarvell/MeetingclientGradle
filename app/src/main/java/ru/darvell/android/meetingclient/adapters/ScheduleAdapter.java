@@ -49,6 +49,7 @@ public class ScheduleAdapter extends BaseAdapter {
 
         ((TextView) view.findViewById(R.id.scheduleTitle)).setText(schedule.getTitle());
         ((TextView) view.findViewById(R.id.scheduleComment)).setText(schedule.getComment());
+        ((TextView) view.findViewById(R.id.scheduleMemberLogin)).setText(schedule.getMember().getLogin());
         return view;
     }
 

@@ -19,7 +19,6 @@ import ru.darvell.android.meetingclient.api.Requester;
 import ru.darvell.android.meetingclient.api.entitys.MainUser;
 import ru.darvell.android.meetingclient.database.DBFabric;
 import ru.darvell.android.meetingclient.service.MeetingService;
-import ru.darvell.android.meetingclient.utils.FileWorkerFactory;
 
 import java.util.Map;
 
@@ -78,6 +77,7 @@ public class AuthActivity extends Activity {
                     if (intent.getIntExtra("result", -2) == 0){
                         Map<String,String> map = DBFabric.getDBWorker(context).getRequests(ACT_ID);
                         DBFabric.getDBWorker(context).delRequest(intent.getLongExtra("id", -10));
+                        Log.d(LOG_TAG, map.get("result"));
                         checkLogin(map.get("result"));
                     }
                 }
@@ -127,7 +127,8 @@ public class AuthActivity extends Activity {
                                         user.getString("email")
                                     );
                 mainUser.saveMainUser(this);
-                Log.i(LOG_TAG, mainUser.getsessionKey());
+
+                Log.i(LOG_TAG, mainUser.toString());
                 showMain();
             }
         }catch (JSONException e){
