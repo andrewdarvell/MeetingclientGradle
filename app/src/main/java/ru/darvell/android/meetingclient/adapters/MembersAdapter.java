@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 import ru.darvell.android.meetingclient.R;
 import ru.darvell.android.meetingclient.api.entitys.Member;
 
@@ -46,7 +47,7 @@ public class MembersAdapter extends BaseAdapter{
 
         Member member = getMember(pos);
 
-//        ((TextView) view.findViewById(R.id.scheduleTitle)).setText(schedule.getTitle());
+        ((TextView) view.findViewById(R.id.friendLogin)).setText(member.getLogin());
 //        ((TextView) view.findViewById(R.id.scheduleComment)).setText(schedule.getComment());
         return view;
     }

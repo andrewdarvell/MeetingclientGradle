@@ -43,6 +43,12 @@ public class MeetingService extends Service{
                 break;
             case MeetingApi.USER_INFO: startUserInfoRequest(intent);
                 break;
+            case MeetingApi.FRIENDS_ALL: startGetAllFriends(intent);
+                break;
+            case MeetingApi.FRIENDS_REQ_FROM: startGetReqFromMe(intent);
+                break;
+            case MeetingApi.FRIENDS_REQ_TO: startGetReqToMe(intent);
+                break;
         }
         return super.onStartCommand(intent, flags, startId);
     }
@@ -78,6 +84,17 @@ public class MeetingService extends Service{
         }
     }
 
+    void startGetAllFriends(Intent intent){
+        new SenderRequest(MeetingApi.prepareGetAllFriends(intent, EntityFactory.getMainUser(this)), this, intent.getIntExtra("method", -1), intent.getIntExtra("actId", -1));
+    }
+
+    void startGetReqToMe(Intent intent){
+        new SenderRequest(MeetingApi.prepareGetReqToMe(intent, EntityFactory.getMainUser(this)), this, intent.getIntExtra("method", -1), intent.getIntExtra("actId", -1));
+    }
+
+    void startGetReqFromMe(Intent intent){
+        new SenderRequest(MeetingApi.prepareGetReqFromMe(intent, EntityFactory.getMainUser(this)), this, intent.getIntExtra("method", -1), intent.getIntExtra("actId", -1));
+    }
 
     class SenderRequest extends Thread{
 

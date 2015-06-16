@@ -75,7 +75,7 @@ public class MainActivity extends ActionBarActivity {
         loginText = (TextView) findViewById(R.id.main_login);
         emailText = (TextView) findViewById(R.id.main_email);
 
-        String[] menuStr = {"111", "222"};
+        String[] menuStr = {"111", "Друзья"};
         mDrawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, menuStr));
 
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
@@ -91,18 +91,24 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (intent.getIntExtra("actId", -1) == ACT_ID){
-                    Log.d(LOG_TAG, "gotRequest");
+
                     setVisiblePB(false);
-                    Map<String,String> map = DBFabric.getDBWorker(context).getRequests(ACT_ID);
-                    int type = Integer.parseInt(map.get("type"));
-                    switch (type){
-                        case MeetingApi.ALL_USER_SCHEDULES: updateSchedules(map.get("result"));
-                            break;
-                        case MeetingApi.USER_INFO: mainUser.UpdateFromJson(map.get("result"));
-                                                    drawUserOnForm();
-                            break;
+                    if (intent.getIntExtra("result", -1) == 0){
+                        long reqId = intent.getLongExtra("id", -1);
+                        Log.d(LOG_TAG, String.valueOf(reqId));
+                        Map<String,String> map = DBFabric.getDBWorker(context).getRequest(reqId);
+                        Log.d(LOG_TAG, map.get("result"));
+                        int type = Integer.parseInt(map.get("type"));
+                        switch (type){
+                            case MeetingApi.ALL_USER_SCHEDULES: updateSchedules(map.get("result"));
+                                break;
+                            case MeetingApi.USER_INFO: mainUser.UpdateFromJson(map.get("result"));
+                                drawUserOnForm();
+                                break;
+                        }
+                        DBFabric.getDBWorker(context).delRequest(reqId);
+                        Log.d(LOG_TAG, map.get("result"));
                     }
-                    Log.d(LOG_TAG, map.get("result"));
                 }
             }
         };
@@ -208,6 +214,7 @@ public class MainActivity extends ActionBarActivity {
             JSONObject response = new JSONObject(jsonStr);
             if (response.getInt("exitCode") == 0) {
                 JSONArray schedulesJson = response.getJSONArray("schedules");
+                schedulesData.clear();
                 for (int i=0; i < schedulesJson.length(); i++){
                     JSONObject scheduleJson = (JSONObject) schedulesJson.get(i);
                     Schedule schedule = new Schedule(scheduleJson);

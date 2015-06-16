@@ -38,6 +38,31 @@ public class Requester {
         intent.putExtra("method", MeetingApi.USER_INFO);
         intent.putExtra("actId", actId);
         intent.putExtra("userId", userId);
-        context.startActivity(intent);
+        context.startService(intent);
     }
+
+    public void doGetFriends(Context context, int actId, long userId){
+        Intent intent = new Intent(context, MeetingService.class);
+        intent.putExtra("method", MeetingApi.FRIENDS_ALL);
+        intent.putExtra("actId", actId);
+        intent.putExtra("userId", actId);
+        context.startService(intent);
+    }
+
+    public void doGetRequestFromMe(Context context, int actId, long userId){
+        Intent intent = new Intent(context, MeetingService.class);
+        intent.putExtra("method", MeetingApi.FRIENDS_REQ_FROM);
+        intent.putExtra("actId", actId);
+        intent.putExtra("userId", actId);
+        context.startService(intent);
+    }
+
+    public void doGetRequestToMe(Context context, int actId, long userId){
+        Intent intent = new Intent(context, MeetingService.class);
+        intent.putExtra("method", MeetingApi.FRIENDS_REQ_TO);
+        intent.putExtra("actId", actId);
+        intent.putExtra("userId", actId);
+        context.startService(intent);
+    }
+
 }

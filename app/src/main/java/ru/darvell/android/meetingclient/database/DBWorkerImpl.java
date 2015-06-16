@@ -45,6 +45,23 @@ public class DBWorkerImpl implements DBWorker{
         return result;
     }
 
+    public Map<String, String> getRequest(long req_id){
+        String sql = "SELECT * " +
+                "FROM requests " +
+                "WHERE id = "+req_id;
+
+        Map<String, String> result = new HashMap<>();
+        SQLiteDatabase sqLiteDatabase = getDBHelper();
+        Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
+        while (cursor.moveToNext()){
+            result.put("id", String.valueOf(cursor.getInt(cursor.getColumnIndex("id"))));
+            result.put("result", cursor.getString(cursor.getColumnIndex("result")));
+            result.put("type", String.valueOf(cursor.getInt(cursor.getColumnIndex("type"))));
+        }
+        sqLiteDatabase.close();
+        return result;
+    }
+
     public void delRequest(long id){
         String sql = "DELETE FROM requests WHERE id = "+id;
         SQLiteDatabase sqLiteDatabase = getDBHelper();

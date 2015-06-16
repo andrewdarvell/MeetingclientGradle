@@ -28,6 +28,9 @@ public class MeetingApi {
     public static final int REGISTER = 2;
     public static final int ALL_USER_SCHEDULES = 3;
     public static final int USER_INFO = 4;
+    public static final int FRIENDS_ALL = 5;
+    public static final int FRIENDS_REQ_FROM = 6;
+    public static final int FRIENDS_REQ_TO = 7;
 
     static {
         urlsString = new HashMap<>();
@@ -35,6 +38,10 @@ public class MeetingApi {
         urlsString.put(REGISTER, "auth/register");
         urlsString.put(ALL_USER_SCHEDULES, "schedules/get_all/");
         urlsString.put(USER_INFO, "user/get_info/");
+        urlsString.put(FRIENDS_ALL, "friend/get_all");
+        urlsString.put(FRIENDS_REQ_FROM, "friend/request/get_from_me");
+        urlsString.put(FRIENDS_REQ_TO, "friend/request/get_to_me");
+
     }
 
 	public static Map<String, String> prepareLogin(Intent intent){
@@ -70,6 +77,30 @@ public class MeetingApi {
     public static Map<String, String> prepareUpdateUser(Intent intent, MainUser mainUser){
         Map<String, String> params = new HashMap<>();
         params.put("method", urlsString.get(USER_INFO)+mainUser.getUserId());
+        params.put("sessionKey", mainUser.getsessionKey());
+        params.put("apiKey", Conf.apiKey);
+        return params;
+    }
+
+    public static Map<String, String> prepareGetAllFriends(Intent intent, MainUser mainUser){
+        Map<String, String> params = new HashMap<>();
+        params.put("method", urlsString.get(FRIENDS_ALL));
+        params.put("sessionKey", mainUser.getsessionKey());
+        params.put("apiKey", Conf.apiKey);
+        return params;
+    }
+
+    public static Map<String, String> prepareGetReqToMe(Intent intent, MainUser mainUser){
+        Map<String, String> params = new HashMap<>();
+        params.put("method", urlsString.get(FRIENDS_REQ_TO));
+        params.put("sessionKey", mainUser.getsessionKey());
+        params.put("apiKey", Conf.apiKey);
+        return params;
+    }
+
+    public static Map<String, String> prepareGetReqFromMe(Intent intent, MainUser mainUser){
+        Map<String, String> params = new HashMap<>();
+        params.put("method", urlsString.get(FRIENDS_REQ_FROM));
         params.put("sessionKey", mainUser.getsessionKey());
         params.put("apiKey", Conf.apiKey);
         return params;
