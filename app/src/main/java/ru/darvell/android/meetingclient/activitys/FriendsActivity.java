@@ -9,6 +9,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TabHost;
 import org.json.JSONArray;
@@ -34,6 +37,7 @@ public class FriendsActivity extends ActionBarActivity {
     final String LOG_TAG = "meeting_friends";
     BroadcastReceiver br;
     MainUser mainUser = new MainUser();
+    ListView mDrawerList;
 
     ListView friendList;
     ArrayList<Member> membersData;
@@ -70,6 +74,11 @@ public class FriendsActivity extends ActionBarActivity {
         fromList = (ListView) findViewById(R.id.requestFromList);
         fromMembersAdapter = new FriendRequestsAdapter(this, fromMembersData);
         fromList.setAdapter(fromMembersAdapter);
+
+        String[] menuStr = {"111", "Друзья"};
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        mDrawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, menuStr));
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         br = new BroadcastReceiver() {
             @Override
@@ -255,5 +264,20 @@ public class FriendsActivity extends ActionBarActivity {
         }else{
             miActionProgressItem.setVisible(false);
         }
+    }
+
+    private class DrawerItemClickListener implements ListView.OnItemClickListener{
+
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            switch (i){
+                case 1: openFriends();
+                    break;
+            }
+        }
+    }
+
+    private void openFriends(){
+        ActivityWorker.showFriends(this);
     }
 }
