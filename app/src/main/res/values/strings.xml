@@ -16,6 +16,11 @@
 	<string name="first_screen">first</string>
 	<string name="action_settings">menu11</string>
 	<string name="item1">menu11</string>
+    <string name="test.main.status">I\'m ok!</string>
+    <string name="test.main.login">darvell</string>
+    <string name="test.main.email">andrew@darvell.ru</string>
+    <string name="test.main.id">1245</string>
+    <string name="main.button.add">Добавить</string>
 
 
 </resources>

@@ -7,7 +7,7 @@
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="fill_parent"
-            android:layout_height="109dp">
+            android:layout_height="wrap_content">
 
         <LinearLayout
                 android:orientation="vertical"
@@ -17,18 +17,19 @@
             <ImageView
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:id="@+id/imageView2"/>
+                    android:id="@+id/imageView2"
+                    android:src="@drawable/abc_ab_bottom_solid_dark_holo"/>
         </LinearLayout>
 
         <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
+                android:layout_height="wrap_content">
 
             <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="fill_parent"
-                    android:layout_height="71dp">
+                    android:layout_height="fill_parent">
 
                 <TextView
                         android:layout_width="wrap_content"
@@ -53,18 +54,6 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent">
-
-                <Button
-                        style="?android:attr/buttonStyleSmall"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="New Button"
-                        android:id="@+id/button3"/>
-            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

@@ -4,13 +4,15 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
 
 
     <FrameLayout
             android:id="@+id/content_frame"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:clickable="false">
 
         <LinearLayout android:orientation="vertical"
                       android:layout_width="match_parent"
@@ -21,7 +23,8 @@
             <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="fill_parent"
-                    android:layout_height="160dp" android:weightSum="1">
+                    android:layout_height="160dp" android:weightSum="1"
+                    >
                 <LinearLayout
                         android:orientation="horizontal"
                         android:layout_width="165dp"
@@ -31,42 +34,84 @@
                             android:layout_height="fill_parent"
                             android:id="@+id/imageViewMain"
                             android:adjustViewBounds="true"
-                            android:scaleType="fitEnd"/>
+                            android:scaleType="fitEnd"
+                            android:layout_margin="5dp"
+                            android:src="@drawable/abc_ab_solid_dark_holo"/>
                 </LinearLayout>
                 <LinearLayout
                         android:orientation="vertical"
                         android:layout_width="fill_parent"
-                        android:layout_height="fill_parent">
+                        android:layout_height="fill_parent"
+                        android:layout_margin="10dp">
+
+                    <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content">
+
+                        <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:text="@string/test.main.status"
+                                android:id="@+id/main_status"/>
+
+                    </LinearLayout>
+
                     <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:text="Medium Text"
+                            android:text="@string/test.main.id"
                             android:id="@+id/main_id"/>
+
                     <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:text="Medium Text"
-                            android:id="@+id/main_login"/>
+                            android:text="@string/test.main.login"
+                            android:id="@+id/main_login"
+                            android:layout_marginTop="5dp"/>
                     <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:text="Medium Text"
-                            android:id="@+id/main_email"/>
+                            android:text="@string/test.main.email"
+                            android:id="@+id/main_email"
+                            android:layout_marginTop="5dp"/>
+
                 </LinearLayout>
             </LinearLayout>
             <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="fill_parent"
-                    android:layout_height="fill_parent">
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
 
                 <ListView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/schedulesList"/>
+                        android:layout_height="0dp"
+                        android:id="@+id/schedulesList"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        />
 
+            </LinearLayout>
+
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    >
+
+                <Button
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:text="@string/main.button.add"
+                        android:id="@+id/button4"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"/>
             </LinearLayout>
 
         </LinearLayout>
